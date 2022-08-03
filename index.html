@@ -98,32 +98,50 @@ svg {
 }
 
 .background_map {
-    animation: bgMap 5s 2s linear infinite;
+    animation: bgMap 8s 2s linear infinite;
     animation-delay: 0s;
-    transform: translateX(0);
+    transform: translateX(127%);
 }
 
 @keyframes bgMap {
     0% {
         transform: translateX(0);
     }
+    5% {
+        transform: translateX(10%);
+    }
+    85% {
+        transform: translateX(10%);
+    }
+    99.99999% {
+        transform: translateX(127%);
+    }
     100% {
-        transform: translateX(200px);
+        transform: translateX(0%);
     }
 }
 
 .front_map {
-    animation: frontMap 5s 2s linear infinite;
+    animation: frontMap 8s 2s linear infinite;
     animation-delay: 0s;
-    transform: translateX(0);
+    transform: translateX(127%);
 }
 
 @keyframes frontMap {
     0% {
-        transform: translateX(0);
+        transform: translateX(127%);
+    }
+    5% {
+        transform: translateX(117%);
+    }
+    85% {
+        transform: translateX(117%);
+    }
+    99.99999% {
+        transform: translateX(0%);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translateX(127%);
     }
 }
 
@@ -583,7 +601,7 @@ g.dicount_star_element {
 }
 
 .location_shiptime {
-    animation: rotateAnimation 5s 2s cubic-bezier(0.4, 0, 1, 1) infinite;
+    animation: rotateAnimation 8s 2s cubic-bezier(0.4, 0, 1, 1) infinite;
     transform: translate(0px, -50px);
     transform-box: fill-box;
     transform-origin: bottom;
@@ -591,7 +609,7 @@ g.dicount_star_element {
     transition: all 15s ease-in;
 }
 .location_delay1 {
-    animation-delay: 3s;
+    animation-delay: 2s;
 }
 
 @keyframes rotateAnimation {
@@ -606,14 +624,14 @@ g.dicount_star_element {
     10% {
         transform: scale(1);
     }
-    60% {
+    40% {
         transform: scale(1);
         opacity: 1;
     }
-    70% {
+    53% {
         transform: scale(1.2);
     }
-    75% {
+    55% {
         transform: scale(0);
     }
     100% {
@@ -624,7 +642,7 @@ g.dicount_star_element {
 
 
 .stroke_animation {
-    animation: rotateStrokAni 5s 2s linear infinite;
+    animation: rotateStrokAni 8s 2s linear infinite;
     transform: translate(0px, 0px) rotateY(0deg);
     stroke-dasharray: 0 100% 0 100%;
     opacity: 0;
@@ -636,20 +654,17 @@ g.dicount_star_element {
         stroke-dasharray: 0 100% 0 100%;
         opacity: 0;
     }
-    20% {
+    15% {
         opacity: 0;
     }
-    22% {
+    17% {
         opacity: 1;
     }
     50% {
         stroke-dasharray:  0 5 90% 0;
         opacity: 1;
     }
-    73% {
-        opacity: 1;
-    }
-    75% {
+    52% {
         stroke-dasharray:  0 0 0 90%;
         opacity: 0;
     }
