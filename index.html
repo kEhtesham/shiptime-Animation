@@ -684,15 +684,47 @@ svg {
 
 .location {
     animation: pinAnimation 20s linear infinite;
-    transform: translate(80px, 70px) scale(0.8);
+    transform: translate(55%, 70px) scale(0.8);
+}
+.location_Delay1 {
+    animation: pinAnimation1 20s linear infinite;
+    transform: translate(65%, 70px) scale(0.8);
+    animation-delay: 10s;
 }
 
 @keyframes pinAnimation {
     0% {
-        transform: translate(80px, 70px) scale(0.8);
+        transform: translate(55%, 70px) scale(0.8);
+        opacity: 1;
+    }
+    99.99% {
+        transform: translate(-67%, 70px) scale(0.8);
+        opacity: 1;
+    }
+    99.999% {
+        opacity: 0;
     }
     100% {
-        transform: translate(-410px, 70px) scale(0.8);
+        transform: translate(55%, 70px) scale(0.8);
+        opacity: 0;   
+    }
+}
+
+@keyframes pinAnimation1 {
+    0% {
+        transform: translate(65%, 70px) scale(0.8);
+        opacity: 1;
+    }
+    99.99% {
+        transform: translate(-57%, 70px) scale(0.8);
+        opacity: 1;
+    }
+    99.999% {
+        opacity: 0;
+    }
+    100% {
+        transform: translate(65%, 70px) scale(0.8);
+        opacity: 0;   
     }
 }
 
@@ -1997,7 +2029,7 @@ svg {
                         <path d="M418.84 70.0869L415.815 68.2636C415.765 68.2336 415.701 68.2342 415.649 68.2651L412.633 70.0832C412.539 70.1402 412.533 70.268 412.623 70.3262L415.648 72.2896C415.699 72.3232 415.769 72.3225 415.822 72.2879L418.839 70.3298C418.931 70.2698 418.932 70.1422 418.84 70.0869Z" fill="#FFFEFE"/>
                     </g>
                 </g>
-                <g class="location2">
+                <g class="location location_Delay1">
                     <path class="stroke_animation" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
                     <path class="stroke_animation" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
                     <path class="stroke_animation" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
@@ -2595,7 +2627,3 @@ svg {
     </div>
 </body>
 </html>
-
-
-
-
