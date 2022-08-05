@@ -763,31 +763,38 @@ svg {
 }
 
 .stroke_animation {
-    animation: rotateStrokAni 8s 1s linear forwards;
+    animation: rotateStrokAni 10s 2s linear infinite;
     transform: translate(0px, 0px) rotateY(0deg);
-    stroke-dasharray: 0px 0px 0px 490px;
+    stroke-dasharray: 0 100% 0 100%;
     opacity: 0;
 }
 
 
 @keyframes rotateStrokAni {
     0% {
-        stroke-dasharray: 0px 0px 0px 490px;
+        stroke-dasharray: 0 100% 0 100%;
         opacity: 0;
     }
-    25% {
+    15% {
         opacity: 0;
     }
-    30% {
-        opacity: 1;        
-    }
-    60% {
-        stroke-dasharray:  4px 4px 0px 0px;
+    17% {
         opacity: 1;
+    }
+    50% {
+        stroke-dasharray:  0 0% 90% 0%;
+        
+    }
+    80% {
+        stroke-dasharray:  0 0% 0% 90%;
+        opacity: 1;
+    }
+    82% {
+        opacity: 0;
     }
     100% {
-        stroke-dasharray:  4px 4px 0px 0px;
-        opacity: 1;
+        stroke-dasharray:  0 0 0 90%;
+        opacity: 0;
     }
 }
 
