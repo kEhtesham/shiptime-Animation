@@ -67,57 +67,6 @@
         }
     }
     
-    .pop_bubble_one {
-        animation: popBubble forwards 1s cubic-bezier(0.69, -0.01, 0.31, 1.64), scaleBubble 18s ease-out infinite;
-        transform: translateY(800px) scale(0);
-        transform-origin: center;
-        transform-box: fill-box;
-        transition: all 0.5s ease-in;
-        display: none;
-    }
-    .bubble_delay0 {
-        animation-delay: 0.5s, 1.5s;
-    }
-    .bubble_delay2 {
-        animation: popBubble forwards 1s 1.5s cubic-bezier(0.69, -0.01, 0.31, 1.64), scaleBubble2 18s 2.5s ease-in-out infinite;
-        
-    }
-    .bubble_delay4 {
-        animation-delay: 2.5s, 3.5s;
-    }
-    
-    @keyframes popBubble {
-        0% {
-            transform: translate(-20px, -20px) scale(0);
-        }
-        100% {
-            transform: translate(-20px, -20px) scale(1);
-        }
-    }
-    
-    @keyframes scaleBubble {
-        0% {
-            transform: translate(-20px, -20px) scale(1);
-        }
-        50% {
-            transform: translate(-20px, -20px) scale(1.4);
-        }
-        100% {
-            transform: translate(-20px, -20px) scale(1);
-        }
-    }
-    @keyframes scaleBubble2 {
-        0% {
-            transform: translate(-20px, -20px) scale(1);
-        }
-        50% {
-            transform: translate(-20px, 10px) scale(1.3);
-        }
-        100% {
-            transform: translate(-20px, -20px) scale(1);
-        }
-    }
-    
     .fexEx_carier, .carier_services, .purolator, .canada_post {
         animation: scaleG 12s 1s linear infinite;
         transform: scale(0.65);
@@ -380,38 +329,112 @@
     .location_delay_alternate {
         transform: translate(17%, 37%);
     }
-    .location_delay_alternate2 {
-        transform: translate(-4%, -4%);
-    }
 
     .stroke_animation {
         animation: rotateStrokAni 20s 0s linear infinite;
         transform: translate(550px, 70px) rotateY(0deg) scale(0.4);
         stroke-dasharray: 0 100% 0 100%;
-        stroke-width: 3px;
+        stroke-dashoffset: 10;
+        stroke-width: 5px;
         opacity: 0;
+    }    
+    .stroke_animation.alternate {
+        animation: rotateStrokAni2 20s 0.5s linear infinite;
     }
-    /* .stroke_animation.alternate {
-        animation: rotateStrokAniAlter 20s 0s linear infinite;
-    } */
-    .stroke_animation.stroke_delay2 {
+    .sa_d1 {
+        animation-delay: 1s;
+    }
+    .sa_d15 {
+        animation-delay: 1.5s;
+    }
+    .sa_d2 {
+        animation-delay: 2s;
+    }
+    .sa_d25 {
+        animation-delay: 1s;
+    }
+
+    .sa_d2_4 {
         animation-delay: 4s;
     }
-
-    .stroke_animation.stroke_delay3 {
-        animation-delay: 0s;
+    .sa_d2_45 {
+        animation-delay: 4.5s;
     }
-
-    .stroke_animation.stroke_delay1 {
+    .sa_d2_5 {
         animation-delay: 5s;
     }
-
-    .stroke_animation.stroke_delay6 {
-        animation-delay: 8s;
+    .sa_d2_55 {
+        animation-delay: 5.5s;
+    }
+    .sa_d2_6 {
+        animation-delay: 6s;
+    }
+    .sa_d2_65 {
+        animation-delay: 6.5s;
     }
 
-    .stroke_animation.stroke_delay4 {
+    .sa_d3_0 {
+        animation-delay: 0s;
+    }
+    .sa_d3_05 {
+        animation-delay: 0.5s;
+    }
+    .sa_d3_1 {
+        animation-delay: 1s;
+    }
+
+    .sa_d5 {
+        animation-delay: 5s;
+    }
+    .sa_d55 {
+        animation-delay: 5.5s;
+    }
+    .sa_d6 {
+        animation-delay: 6s;
+    }
+    .sa_d65 {
+        animation-delay: 6.5s;
+    }
+    .sa_d7 {
+        animation-delay: 7s;
+    }
+
+    .sa_d3_12 {
         animation-delay: 12s;
+    }
+    .sa_d3_125 {
+        animation-delay: 12.5s;
+    }
+    .sa_d3_13 {
+        animation-delay: 13s;
+    }
+    .sa_d3_135 {
+        animation-delay: 13.5s;
+    }
+    .sa_d3_14 {
+        animation-delay: 14s;
+    }
+    .sa_d3_145 {
+        animation-delay: 14.5s;
+    }
+    .sa_d3_15 {
+        animation-delay: 15s;
+    }
+
+    .sa_d6_8 {
+        animation-delay: 8s;
+    }
+    .sa_d6_85 {
+        animation-delay: 8.5s;
+    }
+    .sa_d6_9 {
+        animation-delay: 9s;
+    }
+    .sa_d6_95 {
+        animation-delay: 9.5s;
+    }
+    .sa_d6_10 {
+        animation-delay: 10s;
     }
     
     @keyframes rotateStrokAni {
@@ -420,24 +443,42 @@
             stroke-dasharray: 0 100% 0 100%;
             opacity: 0;
         }
-        15% {
+        5% {
             opacity: 0;
         }
-        17% {
+        6% {
             opacity: 1;
         }
-        30% {
+        12% {
             stroke-dasharray:  0 0% 90% 0%;
         }
-        35% {
+        15% {
             stroke-dasharray:  0 0% 0% 90%;
             opacity: 1;
         }
+        16% {
+            opacity: 0;
+            stroke-dasharray: 0 100% 0 100%;
+        }
+        21% {
+            opacity: 0;
+        }
+        22% {
+            opacity: 1;
+        }
+        28% {
+            stroke-dasharray:  0 0% 90% 0%;
+        }
+        31% {
+            stroke-dasharray:  0 0% 0% 90%;
+            opacity: 1; 
+        }
+        32% {
+            opacity: 0;
+            stroke-dasharray: 0 100% 0 100%;
+        }
         60% {
             transform: translate(-200px, 70px) rotateY(0deg) scale(0.4);
-        }
-        82% {
-            opacity: 0;
         }
         100% {
             stroke-dasharray:  0 0 0 90%;
@@ -448,21 +489,42 @@
     @keyframes rotateStrokAni2 {
         0% {
             transform: translate(800px, 70px) rotateY(0deg) scale(0.4);
-            stroke-dasharray: 0 100% 0 100%;
+            stroke-dasharray: 0 0% 0% 100%;
             opacity: 0;
         }
-        15% {
+        5% {
             opacity: 0;
         }
-        17% {
+        6% {
             opacity: 1;
         }
-        30% {
+        12% {
             stroke-dasharray:  0 0% 90% 0%;
         }
-        35% {
+        15% {
             stroke-dasharray:  0 0% 0% 90%;
             opacity: 1;
+        }
+        16% {
+            opacity: 0;
+            stroke-dasharray: 0 100% 0 100%;
+        }
+        21% {
+            opacity: 0;
+        }
+        22% {
+            opacity: 1;
+        }
+        28% {
+            stroke-dasharray:  0 0% 90% 0%;
+        }
+        31% {
+            stroke-dasharray:  0 0% 0% 90%;
+            opacity: 1; 
+        }
+        32% {
+            opacity: 0;
+            stroke-dasharray: 0 100% 0 100%;
         }
         60% {
             transform: translate(50px, 70px) rotateY(0deg) scale(0.4);
@@ -3971,89 +4033,68 @@
                 </g>
             </g>
 
-            <g clip-path="url(#clip1_649_2711)" class="full_earth earth_waves">
-                <g class="location">
-                    <path class="stroke_animation" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                </g>
-                <g class="location location_delay_alternate">
-                    <path class="stroke_animation stroke_delay1" d="M6.03516 87.0854C11 24.4735 46.5 -3.02591 78 1.47341" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M215.471 104.126C198.66 38.3215 142.121 24.2391 111.5 45.9733" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M112.5 45.9627C102.5 24.4759 107 1.97501 120.5 2.97555" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M111.285 46.0763C91.5735 32.2333 23.1151 17.154 5.97568 87.1635" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M139.603 155.238C106.5 75.9713 40.2634 61.8886 6.51059 87.0285" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M185.681 138.837C177.159 66.6465 141.949 33.1914 111.499 45.9732" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
-                <g class="location">
-                    <path class="stroke_animation stroke_delay2" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate stroke_delay2" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation stroke_delay2" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate stroke_delay2" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation stroke_delay2" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                </g>
-                <g class="location location_delay_alternate">
-                    <path class="stroke_animation stroke_delay3" d="M230.03 69.5171C222.024 44.8555 167.606 -12.9627 95.5 34.2422" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay3" d="M95.5014 34.2419C111.501 28.2425 145.502 53.7418 167.073 122.697" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay3" d="M21.5504 126.837C24.5499 79.3366 48.9132 14.519 95.5003 34.2414" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
-                <g class="location">
-                    <path class="stroke_animation stroke_delay4" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate stroke_delay4" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation stroke_delay4" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation alternate stroke_delay4" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                    <path class="stroke_animation stroke_delay4" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
-                </g>
-                <g class="location location_delay_alternate2">
-                    <path <path class="stroke_animation stroke_delay6" d="M106.363 72.7579C109.134 20.8168 148.262 -21.776 185.51 14.5558" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path <path class="stroke_animation stroke_delay6" d="M185.876 65.5083C170.546 5.66113 118.535 -8.06787 90.6133 11.6986" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path <path class="stroke_animation stroke_delay6" d="M59.2025 194.669C35.0849 105.609 69.5984 42.4726 106.17 72.5675" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path <path class="stroke_animation stroke_delay6" d="M2.79446 75.2787C39.5058 29.2358 84.3383 35.4991 106.334 72.2795" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path <path class="stroke_animation stroke_delay6" d="M158.772 68.6825C153.769 32.3989 167.74 12.0728 185.789 14.8537" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
-                <g class="location location_delay_alternate2">
-                    <path class="stroke_animation stroke_delay1" d="M6.03516 87.0854C11 24.4735 46.5 -3.02591 78 1.47341" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M215.471 104.126C198.66 38.3215 142.121 24.2391 111.5 45.9733" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M112.5 45.9627C102.5 24.4759 107 1.97501 120.5 2.97555" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M111.285 46.0763C91.5735 32.2333 23.1151 17.154 5.97568 87.1635" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M139.603 155.238C106.5 75.9713 40.2634 61.8886 6.51059 87.0285" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="stroke_animation stroke_delay1" d="M185.681 138.837C177.159 66.6465 141.949 33.1914 111.499 45.9732" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <g class="full_earth earth_waves">
+                <g clip-path="url(#clip1_649_2711)">
+                    <g class="location">
+                        <path class="stroke_animation alternate" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d1 alternate" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d15" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation alternate sa_d2" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d25" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                    </g>
+                    <g class="location location_delay_alternate">
+                        <path class="stroke_animation sa_d5" d="M6.03516 87.0854C11 24.4735 46.5 -3.02591 78 1.47341" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d55" d="M215.471 104.126C198.66 38.3215 142.121 24.2391 111.5 45.9733" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6" d="M112.5 45.9627C102.5 24.4759 107 1.97501 120.5 2.97555" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d65" d="M111.285 46.0763C91.5735 32.2333 23.1151 17.154 5.97568 87.1635" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d7" d="M139.603 155.238C106.5 75.9713 40.2634 61.8886 6.51059 87.0285" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d75" d="M185.681 138.837C177.159 66.6465 141.949 33.1914 111.499 45.9732" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <g class="location">
+                        <path class="stroke_animation sa_d2_4" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation alternate sa_d2_45" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d2_55" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation alternate sa_d2_6" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d2_65" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                    </g>
+                    <g class="location location_delay_alternate">
+                        <path class="stroke_animation sa_d3_0 alternate" d="M230.03 69.5171C222.024 44.8555 167.606 -12.9627 95.5 34.2422" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_05" d="M95.5014 34.2419C111.501 28.2425 145.502 53.7418 167.073 122.697" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_1 alternate" d="M21.5504 126.837C24.5499 79.3366 48.9132 14.519 95.5003 34.2414" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <g class="location">
+                        <path class="stroke_animation sa_d3_12" d="M190.773 240.409C194 141.999 332 -4.50113 415 98.4988" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation alternate sa_d3_125" d="M638.164 215.718C611.5 75.9989 474.5 43.4985 416 98.9996" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d3_13" d="M364.216 218.752C356.544 177.746 348.116 145.373 367.001 113.998C375.972 100.261 397.712 90.8295 415.501 98.4987" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation alternate sa_d3_135" d="M635.55 400.191C644.602 331.175 640.173 186.646 538.5 108.498C516.234 88.7939 460.501 72.9986 415.501 99.9983" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                        <path class="stroke_animation sa_d3_14" d="M339.185 468.391C258.11 355.707 280.837 139.298 325.001 99.998C344.883 78.2147 391.477 77.3415 415 97.9976" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+                    </g>
+                    <g class="location">
+                        <path class="stroke_animation sa_d6_8" d="M106.363 72.7579C109.134 20.8168 148.262 -21.776 185.51 14.5558" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6_85" d="M185.876 65.5083C170.546 5.66113 118.535 -8.06787 90.6133 11.6986" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6_9" d="M59.2025 194.669C35.0849 105.609 69.5984 42.4726 106.17 72.5675" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6_95" d="M2.79446 75.2787C39.5058 29.2358 84.3383 35.4991 106.334 72.2795" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6_10" d="M158.772 68.6825C153.769 32.3989 167.74 12.0728 185.789 14.8537" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <g class="location">
+                        <path class="stroke_animation sa_d5" d="M6.03516 87.0854C11 24.4735 46.5 -3.02591 78 1.47341" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d55" d="M215.471 104.126C198.66 38.3215 142.121 24.2391 111.5 45.9733" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d6" d="M112.5 45.9627C102.5 24.4759 107 1.97501 120.5 2.97555" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d65" d="M111.285 46.0763C91.5735 32.2333 23.1151 17.154 5.97568 87.1635" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d7" d="M139.603 155.238C106.5 75.9713 40.2634 61.8886 6.51059 87.0285" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d75" d="M185.681 138.837C177.159 66.6465 141.949 33.1914 111.499 45.9732" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <g class="location">
+                        <path class="stroke_animation sa_d3_125" d="M6.03516 87.0854C11 24.4735 46.5 -3.02591 78 1.47341" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_13" d="M215.471 104.126C198.66 38.3215 142.121 24.2391 111.5 45.9733" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_135" d="M112.5 45.9627C102.5 24.4759 107 1.97501 120.5 2.97555" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_14" d="M111.285 46.0763C91.5735 32.2333 23.1151 17.154 5.97568 87.1635" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_145" d="M139.603 155.238C106.5 75.9713 40.2634 61.8886 6.51059 87.0285" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="stroke_animation sa_d3_15" d="M185.681 138.837C177.159 66.6465 141.949 33.1914 111.499 45.9732" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
                 </g>
             </g>
 
-            <g class="pop_bubble_one bubble_delay2">
-                <circle cx="1000" cy="43" r="65" fill="#F4F5F8" stroke="white" stroke-width="6"></circle>
-                <rect xmlns="http://www.w3.org/2000/svg" x="938" y="-19" width="124" height="124" fill="url(#pattern3)">
-                </rect>
-                <circle cx="1000" cy="43" r="40" fill="#F4F5F8" class="blink_circle2"></circle>
-            </g>
-
-            <g class="pop_bubble_one bubble_delay0">
-                <mask id="mask1_572_5367" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="58" y="11" width="124"
-                    height="124">
-                    <circle cx="120" cy="73" r="62" fill="#EEEEEE" />
-                </mask>
-                <circle cx="120" cy="73" r="65" fill="#EEEEEE" stroke="white" stroke-width="6" />
-                <g mask="url(#mask1_572_5367)">
-                    <rect x="58" y="11" width="125.722" height="124" fill="url(#patternCirImg3)" />
-                </g>
-                <circle cx="120" cy="73" r="62" fill="#EEEEEE" class="blink_circle blink_duration2" />
-            </g>
-
-            <g class="pop_bubble_one bubble_delay4">
-                <circle cx="65.5" cy="691.5" r="60.5" fill="#EEEEEE" stroke="white" stroke-width="6" />
-                <mask id="mask2_572_5367" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="8" y="634" width="115"
-                    height="115">
-                    <circle cx="65.5" cy="691.5" r="57.5" fill="#EEEEEE" />
-                </mask>
-                <g mask="url(#mask2_572_5367)">
-                    <rect xmlns="http://www.w3.org/2000/svg" x="8" y="634" width="115" height="115"
-                        fill="url(#pattern5)"></rect>
-                </g>
-                <circle cx="65.5" cy="691.5" r="57.5" fill="#EEEEEE" class="blink_circle blink_duration1" />
-            </g>
             <g class="dicount_star_element animation_delay2">
                 <path
                     d="M87.5085 41.6695C88.3037 40.7794 89.6963 40.7794 90.4915 41.6695L94.5045 46.1614C95.1376 46.87 96.1817 47.0354 97.0027 46.5571L102.207 43.5251C103.239 42.9243 104.563 43.3547 105.044 44.4469L107.473 49.9591C107.856 50.8286 108.798 51.3085 109.727 51.1074L115.614 49.8321C116.78 49.5794 117.907 50.398 118.027 51.5855L118.633 57.5783C118.729 58.5237 119.476 59.2712 120.422 59.3668L126.415 59.9732C127.602 60.0933 128.421 61.22 128.168 62.3864L126.893 68.2734C126.691 69.202 127.171 70.1439 128.041 70.527L133.553 72.9556C134.645 73.4368 135.076 74.7613 134.475 75.7925L131.443 80.9973C130.965 81.8183 131.13 82.8624 131.839 83.4955L136.331 87.5085C137.221 88.3037 137.221 89.6963 136.331 90.4915L131.839 94.5045C131.13 95.1376 130.965 96.1817 131.443 97.0027L134.475 102.207C135.076 103.239 134.645 104.563 133.553 105.044L128.041 107.473C127.171 107.856 126.691 108.798 126.893 109.727L128.168 115.614C128.421 116.78 127.602 117.907 126.415 118.027L120.422 118.633C119.476 118.729 118.729 119.476 118.633 120.422L118.027 126.415C117.907 127.602 116.78 128.421 115.614 128.168L109.727 126.893C108.798 126.691 107.856 127.171 107.473 128.041L105.044 133.553C104.563 134.645 103.239 135.076 102.207 134.475L97.0027 131.443C96.1817 130.965 95.1376 131.13 94.5045 131.839L90.4915 136.331C89.6963 137.221 88.3037 137.221 87.5085 136.331L83.4955 131.839C82.8624 131.13 81.8183 130.965 80.9973 131.443L75.7925 134.475C74.7613 135.076 73.4368 134.645 72.9556 133.553L70.527 128.041C70.1439 127.171 69.202 126.691 68.2734 126.893L62.3864 128.168C61.22 128.421 60.0933 127.602 59.9732 126.415L59.3668 120.422C59.2712 119.476 58.5237 118.729 57.5783 118.633L51.5855 118.027C50.398 117.907 49.5794 116.78 49.8321 115.614L51.1074 109.727C51.3085 108.798 50.8286 107.856 49.9591 107.473L44.4469 105.044C43.3547 104.563 42.9243 103.239 43.5251 102.207L46.5571 97.0027C47.0354 96.1817 46.87 95.1376 46.1614 94.5045L41.6695 90.4915C40.7794 89.6963 40.7794 88.3037 41.6695 87.5085L46.1614 83.4955C46.87 82.8624 47.0354 81.8183 46.5571 80.9973L43.5251 75.7925C42.9243 74.7613 43.3547 73.4368 44.4469 72.9556L49.9591 70.527C50.8286 70.1439 51.3085 69.202 51.1074 68.2734L49.8321 62.3864C49.5794 61.22 50.398 60.0933 51.5855 59.9732L57.5783 59.3668C58.5237 59.2712 59.2712 58.5237 59.3668 57.5783L59.9732 51.5855C60.0933 50.398 61.22 49.5794 62.3864 49.8321L68.2734 51.1074C69.202 51.3085 70.1439 50.8286 70.527 49.9591L72.9556 44.4469C73.4368 43.3547 74.7613 42.9243 75.7925 43.5251L80.9973 46.5571C81.8183 47.0354 82.8624 46.87 83.4955 46.1614L87.5085 41.6695Z"
