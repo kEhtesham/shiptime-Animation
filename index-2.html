@@ -3222,7 +3222,8 @@
                     <rect xmlns="http://www.w3.org/2000/svg" x="511.5" y="382.5" width="479" height="82" rx="8.5" fill="white" stroke="#F2F1FF"></rect>
                     <g xmlns="http://www.w3.org/2000/svg" opacity="0.5">
                         <text fill="#757575" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="19" letter-spacing="0em" text-decoration="line-through"><tspan x="802" y="430.494">$18.07</tspan></text>
-                        <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em"><tspan x="877.566" y="433.07">$7.07</tspan></text>
+                        <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em">
+                            <tspan class="neww_counter amount" x="877.566" y="433.07">$7.07</tspan></text>
                         <g clip-path="url(#clip12_576_5736)">
                             <path d="M621.974 412.936L625.45 416.709L628.796 412.936H635.942L628.959 420.67L636.038 428.468H628.604L625.161 424.665L621.749 428.468H614.57L621.588 420.702L614.57 412.936H621.974Z" fill="#FF5900"></path>
                             <path d="M614.572 412.935V418.183H606.624V422.998H614.572V428.467H600.783V404H614.572V409.454H606.624V412.935H614.572Z" fill="#FF5900"></path>
@@ -3545,6 +3546,53 @@ setTimeout(function () {
     }, 3000);
 }, 4000);
 </script>
+
+
+<script>
+const Amount = [7.07, 10.23];
+let newCounter = 1;
+
+setTimeout(function () {
+    $(document).ready(function () {
+        $.fn.countDiscount = function () {
+            if (newCounter === 8) {
+                newCounter = 0
+            }
+            $(".amount").text(finalAmount[newCounter]);
+            
+            newCounter++;
+
+            $(".new_counter").each(countUp);
+            function countUp() {
+                var num = $(this).text();
+                var decimal = 0;
+                if (num.indexOf(".") > 0) {
+                    decimal = num.toString().split(".")[1].length;
+                }
+                $(this)
+                    .prop("Counter", 0.0)
+                    .animate(
+                        {
+                            Counter: $(this).text()
+                        },
+                        {
+                            duration: 1200,
+                            easing: "swing",
+                            step: function (now) {
+                                $(this).text(parseFloat(now).toFixed(decimal));
+                            }
+                        }
+                    );
+            }
+        }
+        $.fn.countDiscount();
+    });
+    setInterval(function () {
+        $.fn.countDiscount();
+    }, 12000);
+}, 4000);
+</script>
+    
 
 </body>
 </html>
