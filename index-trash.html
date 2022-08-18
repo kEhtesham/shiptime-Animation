@@ -756,95 +756,92 @@
         transform: translate(-10px, 3px);
     }
 
-    .second_svg {
+    .first_svg {
         animation: logoSwipeAnimation 24s 1s linear infinite;
         transform: translate(0px, 0px);
     }
 
-    /* @keyframes logoSwipeAnimation {
+    @keyframes logoSwipeAnimation {
         0% {
             transform: translate(0px, 0px);
         }
-        50% {
+        48% {
             transform: translate(0px, 0px);
         }
-        54% {
-            transform: translate(-196px, 0px);
-        }
-        98% {
-            transform: translate(-196px, 0px);
-        }
-        99.98% {
-            transform: translate(-358px, 0px);
+        50% {
+            transform: translate(0px, -53px);
             opacity: 1;
         }
-        99.99% {
-            transform: translate(-358px, 0px);
+        50.01% {
+            transform: translate(0px, -53px);
+            opacity: 0;
+        }
+        50.02% {
+            opacity: 0;
+            transform: translate(0px, 53px);
+        }
+        50.03% {
+            opacity: 1;
+        }
+        100% {
+            transform: translate(0px, 53px);
+        }
+    }
+
+    .second_svg {
+        animation: logoSwipeAnimationAlt 24s 1s linear infinite;
+        transform: translate(0px, 2px);
+    }
+
+    @keyframes logoSwipeAnimationAlt {
+        0% {
+            transform: translate(0px, 2px);
+            opacity: 1;
+        }
+        48% {
+            transform: translate(0px, 2px);
+        }
+        50% {
+            transform: translate(0px, -42px);
+        }
+        98% {
+            transform: translate(0px, -42px);
+        }
+        99.998% {
+            transform: translate(0px, -80px);
+            opacity: 1;
+        }
+        99.999% {
+            transform: translate(0px, -80px);
             opacity: 0;
         }
         100% {
             opacity: 0;
-            translate: translate(0px, 0px);
+            transform: translate(0px, 2px);
         }
-    } */
-
-    .first_svg {
-        animation: logoSwipeAnimationAlt 24s 1s linear infinite;
-        transform: translate(0px, 0px);
     }
 
-    /* @keyframes logoSwipeAnimationAlt {
-        0% {
-            transform: translate(0px, 0px);
-        }
-        50% {
-            transform: translate(0px, 0px);
-        }
-        54% {
-            transform: translate(-200px, 0px);
-        }
-        96.99% {
-            transform: translate(-200px, 0px);
-            opacity: 1;
-        }
-        96.991% {
-            transform: translate(-200px, 0px);
-            opacity: 0;
-        }
-        96.992% {
-            opacity: 0;
-            transform: translate(200px, 0px);
-        }
-        96.993% {
-            opacity: 1;
-        }
-        99%{
-            transform: translate(0px, 0px);
-        }
-    } */
 
     .first_carrier_group {
         animation: moveCarrierCard 24s 1s linear infinite;
-        transform: translateX(0px);
+        transform: translate(0px, 0px);
     }
 
-    /* @keyframes moveCarrierCard {
+    @keyframes moveCarrierCard {
         0% {
-            transform: translateX(0px);
+            transform: translate(0px, 0px);
+            opacity: 1;
         }
-        51.09% {
-            transform: translateX(0px);
+        48% {
+            transform: translate(0px, 0px);
         }
-        51.10% {
-            transform: translateX(30px);
+        50% {
+            transform: translate(0px, 8px);
         }
-        96.48% {
-            transform: translateX(30px);
+        100% {
+            transform: translate(0px, 8px);
         }
-        96.49% {
-            transform: translateX(0px);
-        }
-    } */
+    }
 
 </style>
 </head>
@@ -3390,7 +3387,7 @@
                         <g xmlns="http://www.w3.org/2000/svg" opacity="0.5" class="logo_animation">
                             <text fill="#757575" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="19" letter-spacing="0em" text-decoration="line-through"><tspan x="802" y="649.494">$18.07</tspan></text>
                             <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em"><tspan x="877" y="652.07">$</tspan><tspan class="amount4 new_counter" x="897" y="652.07">9.88</tspan></text>
-                            <g clip-path="url(#clip14_778_3594)x" class="main_group">
+                            <g clip-path="url(#clip14_778_3594)" class="main_group">
                                 <g class="dhl_svg first_svg">
                                     <path d="M552 662V623H728.893V662H552Z" fill="#FECC00"/>
                                     <path d="M609.034 639.296C608.261 640.342 606.968 642.16 606.181 643.221C605.781 643.761 605.059 644.742 607.452 644.742C609.983 644.742 620.048 644.742 620.048 644.742C620.048 644.742 622.079 641.983 623.781 639.675C626.096 636.536 623.981 630.004 615.704 630.004C608.296 630.004 583.109 630.004 583.109 630.004L577.458 637.675C577.458 637.675 606.756 637.675 608.26 637.675C609.815 637.675 609.794 638.266 609.034 639.296V639.296ZM599.78 646.634C597.388 646.634 598.109 645.652 598.509 645.112C599.296 644.05 600.611 642.251 601.384 641.205C602.145 640.176 602.165 639.584 600.608 639.584C599.105 639.584 586.52 639.584 586.52 639.584L575.17 654.995C575.17 654.995 595.442 654.995 602.85 654.995C611.992 654.995 617.082 648.783 618.651 646.635C618.651 646.634 602.311 646.634 599.78 646.634V646.634ZM617.787 654.995H634.025L640.181 646.633L623.945 646.635C623.94 646.634 617.787 654.995 617.787 654.995V654.995ZM659.683 630.004L653.455 638.455H646.208L652.433 630.004H636.2L625.34 644.742H665.057L675.914 630.004H659.683ZM641.272 654.995H657.504L663.663 646.635H647.431C647.425 646.634 641.272 654.995 641.272 654.995ZM552 649.932V651.708H574.614L575.921 649.932H552ZM578.352 646.634H552V648.408H577.042L578.352 646.634ZM552 654.995H572.192L573.492 653.229H552V654.995ZM705.063 651.707H728.893V649.931H706.371L705.063 651.707ZM702.642 654.995H728.893V653.229H703.941L702.642 654.995ZM708.798 646.634L707.492 648.41H728.893V646.634H708.798ZM687.536 644.742L698.395 630.004H681.203C681.197 630.004 670.336 644.742 670.336 644.742H687.536ZM668.944 646.634C668.944 646.634 667.757 648.254 667.18 649.034C665.142 651.785 666.945 654.995 673.598 654.995C681.284 654.995 699.668 654.995 699.668 654.995L705.827 646.635H668.944V646.634Z" fill="#D50029"/>
@@ -3410,7 +3407,7 @@
                         <g xmlns="http://www.w3.org/2000/svg" opacity="0.5" class="logo_animation">
                             <text fill="#757575" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="19" letter-spacing="0em" text-decoration="line-through"><tspan x="802" y="576.494">$18.07</tspan></text>
                             <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em"><tspan x="877" y="579.07">$</tspan><tspan class="amount3 new_counter" x="897" y="579.07">8.58</tspan></text>
-                            <g clip-path="url(#clip13_778_3594)x" class="main_group">
+                            <g clip-path="url(#clip13_778_3594)" class="main_group">
                                 <g class="fedex_svg first_svg">
                                     <path d="M621.974 558.936L625.45 562.709L628.796 558.936H635.942L628.959 566.67L636.038 574.468H628.604L625.161 570.665L621.749 574.468H614.57L621.588 566.702L614.57 558.936H621.974Z" fill="#FF5900"/>
                                     <path d="M614.572 558.935V564.183H606.624V568.998H614.572V574.467H600.783V550H614.572V555.454H606.624V558.935H614.572Z" fill="#FF5900"/>
@@ -3449,7 +3446,7 @@
                         <g xmlns="http://www.w3.org/2000/svg" opacity="0.5" class="logo_animation">
                             <text fill="#757575" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="19" letter-spacing="0em" text-decoration="line-through"><tspan x="802" y="503.494">$18.07</tspan></text>
                             <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em"><tspan x="877" y="506.07">$</tspan><tspan class="amount2 new_counter" x="897" y="506.07">8.23</tspan></text>
-                            <g clip-path="url(#clip12_778_3594)x" class="main_group">
+                            <g clip-path="url(#clip12_778_3594)" class="main_group">
                                 <g class="canada_post_svg first_svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M719 515.941V496.947H552V515.941H719ZM719 495.926V477.012H552V495.926H719Z" fill="#004890"/>
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M634.968 480.205C626.193 480.205 619.098 487.48 619.098 496.476C619.098 505.474 626.193 512.748 634.968 512.748C643.743 512.748 650.915 505.474 650.915 496.476C650.915 487.48 643.743 480.205 634.968 480.205Z" fill="#D11C00"/>
@@ -3480,7 +3477,7 @@
                         <g xmlns="http://www.w3.org/2000/svg" opacity="0.5" class="logo_animation">
                             <text fill="#757575" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="19" letter-spacing="0em" text-decoration="line-through"><tspan x="802" y="430.494">$18.07</tspan></text>
                             <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Roboto" font-size="28" class="font_bold" letter-spacing="0em"><tspan x="877.566" y="433.07">$</tspan><tspan class="amount new_counter" x="897.566" y="433.07">7.07</tspan></text>
-                            <g clip-path="url(#clip11_576_5736)x" class="main_group">
+                            <g clip-path="url(#clip11_576_5736)" class="main_group">
                                 <g class="purolator_svg first_svg">
                                     <path d="M597.242 427.4C595.838 426.776 595.214 427.868 594.746 429.116C594.122 430.676 593.342 432.236 592.562 433.64C591.782 435.668 590.222 436.604 588.038 436.448C587.414 436.448 586.79 436.448 586.01 436.448C585.23 436.448 585.542 435.98 585.542 435.824C587.102 432.548 588.506 429.272 590.066 425.996C592.25 421.316 594.434 416.636 596.618 411.8C596.774 411.332 597.086 411.176 597.554 411.176C600.362 411.176 602.858 411.176 605.666 411.176C606.914 411.176 608.006 411.332 609.254 411.956C611.282 412.892 612.062 414.452 611.438 416.792C610.19 421.94 606.134 425.84 600.986 426.62C600.05 427.4 598.802 427.4 597.242 427.4ZM597.71 423.188C598.334 423.344 598.958 423.344 599.426 423.344C602.702 423.344 605.51 421.004 606.134 418.04C606.29 416.792 605.978 416.012 604.73 415.7C603.794 415.544 602.702 415.544 601.61 415.544C601.142 415.544 601.142 415.7 600.986 416.168C600.518 417.104 600.206 418.196 599.582 418.976C598.958 420.224 598.178 421.784 597.71 423.188Z" fill="#EE392A"/>
                                     <path d="M574.622 436.602C573.686 436.602 572.594 436.602 571.502 436.602C570.878 436.602 570.878 436.446 571.034 435.978C573.53 430.674 575.87 425.214 578.522 419.91C579.77 417.414 580.862 414.606 582.266 412.11C582.422 411.642 582.734 411.486 583.046 411.486C585.854 411.486 588.506 411.486 591.314 411.486C591.938 411.486 591.938 411.486 591.782 412.11C588.506 419.442 585.074 426.618 581.486 433.95C580.706 435.666 579.302 436.758 577.118 436.758C576.494 436.602 575.714 436.602 574.622 436.602Z" fill="#02539C"/>
@@ -3736,16 +3733,16 @@
                     <rect width="1050" height="803" fill="white" />
                 </clipPath>
                 <clipPath id="clip11_576_5736">
-                    <rect width="187" height="39" fill="white" transform="translate(552 404)"/>
+                    <rect width="187" height="42" fill="white" transform="translate(552 404)"/>
                 </clipPath>
                 <clipPath id="clip12_778_3594">
-                    <rect width="187" height="39" fill="white" transform="translate(552 477)"/>
+                    <rect width="187" height="42" fill="white" transform="translate(552 477)"/>
                 </clipPath>
                 <clipPath id="clip13_778_3594">
-                    <rect width="187" height="39" fill="white" transform="translate(552 550)"/>
+                    <rect width="187" height="42" fill="white" transform="translate(552 550)"/>
                 </clipPath>
                 <clipPath id="clip14_778_3594">
-                    <rect width="187" height="39" fill="white" transform="translate(552 623)"/>
+                    <rect width="187" height="42" fill="white" transform="translate(552 623)"/>
                 </clipPath>
                 <clipPath id="clip1_649_2711">
                     <rect x="156" y="83" width="525" height="525" rx="262.5" fill="white" />
