@@ -1,0 +1,772 @@
+jQuery(function ($) {
+
+    // ====================================================================
+    // ShipTime Namespace
+    // ====================================================================
+    var shipTime = shipTime || {};
+
+    var params = new URL(window.location.href).searchParams;
+    var utm_medium = params.get('utm_medium');
+    var utm_source = params.get('utm_source');
+    var utm_campaign = params.get('utm_campaign');
+
+    if (utm_source && utm_source != null && utm_source != '') {
+        localStorage.setItem("st_utm_source", utm_source);
+    }
+    if (utm_medium && utm_medium != null && utm_medium != '') {
+        localStorage.setItem("st_utm_medium", utm_medium);
+    }
+    if (utm_campaign && utm_campaign != null && utm_campaign != '') {
+        localStorage.setItem("st_utm_campaign", utm_campaign);
+    }
+
+    //=====================================================================
+    //common function
+    //=====================================================================
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
+
+    function showErrorMessage(f_msgId,f_field, f_msg, f_ExtraCssClass)
+    {
+        if(IsMessageExist(f_msgId))
+            $( f_msgId ).remove();
+        var err_id = $(f_field).attr('aria-describedby')
+        console.log('err_id::', err_id)
+        if(f_msgId == ".error-form")
+
+            $(f_field).after('<span style=\'position:relative !important;\' class="error error_msg '+   f_msgId.substring(1,f_msgId.length) + ' quote-red" id="' + err_id + '">'+ f_msg +'</span>');
+        else
+            $(f_field).after('<span class="error '+   f_msgId.substring(1,f_msgId.length) + ' '+ f_ExtraCssClass + ' quote-red" id="' + err_id + '">'+ f_msg +'</span>');
+
+        $(f_field).addClass('invalid');
+    }
+
+    function showSuccessMessage(f_msgId,f_field, f_msg, f_ExtraCssClass)
+    {
+        if(IsMessageExist(f_msgId))
+            $( f_msgId ).remove();
+
+        if(f_msgId == ".success-form")
+            $(f_field).after('<span style=\'position:relative !important;\' class="success '+   f_msgId.substring(1,f_msgId.length) + ' quote-red">'+ f_msg +'</span>');
+        else
+            $(f_field).after('<span class="success '+   f_msgId.substring(1,f_msgId.length) + ' '+ f_ExtraCssClass + ' quote-red">'+ f_msg +'</span>');
+
+        $(f_field).addClass('invalid');
+    }
+
+    function hidErrorMessage(f_msgId,f_field)
+    {
+        if(IsMessageExist(f_msgId))
+            $(f_msgId).remove();
+
+        $(f_field).removeClass('invalid');
+    }
+
+    function IsMessageExist(f_msgId)
+    {
+        var $msg = jQuery(f_msgId);
+        return ($msg.length > 0);
+    }
+
+    function IsEmpty(f_field)
+    {
+        return (!($(f_field).val().length > 0) )
+    }
+
+    // ====================================================================
+    // ShipTime Server Calls
+    // ====================================================================
+
+    var rest_api_url = ''; //'https://signupapi.appspaces.ca/signup';
+    var cfib_rest_api_url = '';//'https://cfibapi.appspaces.ca/zoomshipr-api/zoomshipr/signup';
+    var login_url='';
+    var shiptime_host = '';
+
+    function checkRefer()
+    {
+        //check referer
+        if(g_refercode == "")
+            return;
+
+        // Submit the lead's email
+        shipTime.ajax({
+                referCode: g_refercode
+            },
+            '/contacts/refer', 'refer');
+    }
+
+    function getBaseURL() {
+        var url = location.href;  // entire url including querystring - also: window.location.href;
+        var baseURL = url.substring(0, url.indexOf('/', 14));
+        return baseURL;
+    }
+
+    function fnGetConfigFromServer() {
+        var configUrl = icw_lang_object.siteurl+'/api/getconfig.php';
+        //var configUrl = getBaseURL() + '/shiptime/api/getconfig.php';
+        $.ajax({
+            dataType: 'json',
+            url: configUrl,
+            method: 'GET',
+            async: true,
+            success: function (data, statusCode) {
+                if (data != undefined) {
+                    rest_api_url = data.rest_api_url;
+                    shiptime_host = data.shiptime_host;
+                    cfib_rest_api_url= data.cfib_rest_api_url;
+                    login_url = data.login_url;
+
+                    checkRefer();
+                } else {
+                    console.log("unable to get rest api url");
+                }
+            },
+            error: function (error) {
+                console.log("unable to get url");
+            }
+        });
+    }
+
+    //Load initial configurations
+    fnGetConfigFromServer();
+
+    /**
+     * form is actually a css class after which to display an error message
+     */
+    shipTime.ajax = function (data, url, form) {
+        //construct URL
+        var l_stFullAPI_URL=  rest_api_url + url;
+
+        //We have to use diff url for cfib
+        if(form == 'cfib')
+        {
+            l_stFullAPI_URL=  cfib_rest_api_url;// + url;
+        }
+
+        $.ajax({
+            url: l_stFullAPI_URL,
+            type: 'POST',
+            contentType: 'text/plain',
+            data: JSON.stringify(data),
+            beforeSend: function () {
+                if (url.indexOf('redirect') > 0) { //Only while signup
+                    $('#btnSignup').html('<i class="fa fa-refresh fa-spin fa-fw"></i><span> '+icw_lang_object.processing+'</span>');
+                    $('#btnSignup').prop('disabled', true);
+                }
+            }
+        }).then(
+            // Ajax call was a success
+            function (data, status) {
+                $('#btnSignup').html(icw_lang_object.start_shipping);
+
+                try {
+                    data = JSON.parse(data); // on local receive json, on live will get string
+                } catch (e) { }
+
+                try {
+                    if (data.message == 'Invalid_agent_access_code') {
+                        showErrorMessage('.error-form','#error-form-container',icw_lang_object.agent_access_invalide_code);
+                        $('#btnSignup').prop('disabled', false);
+                        return;
+                    }
+                } catch (e) { }
+
+                if (data.result && data.result == 'error') {
+                    showErrorMessage('.error-form','#error-form-container', data.message);
+                    $('#btnSignup').prop('disabled', false);
+                    return;
+                }
+
+                hidErrorMessage('.error-form','#error-form-container');
+                // Redirect if this is after the create form has been filled out
+                if (url.indexOf('redirect') > 0 || data.url) {
+                    localStorage.removeItem("st_utm_source");
+                    localStorage.removeItem("st_utm_medium");
+                    localStorage.removeItem("st_utm_campaign");
+
+                    try {
+                        data = JSON.parse(data);	// What for do we parse data again?
+                    } catch (e) { }
+                    if (data.url) {
+                        window.location = data.url;
+                    } else {
+                        redirectToLogin();
+                    }
+                    return;
+                }
+
+                if (url.indexOf('contacts') > 0) {
+                    if(form == 'frmGetStarted') {
+                        $('#signup').modal();
+                        $('#signup').modal('open');
+                        makeFocusInsideModal('#signup')
+                        $('.formSignupEmail').val($('.getStartedEmail').val());
+                        // ga('send', 'event', 'Sign Up Free', 'click');
+                        ga('send', {
+                            hitType: 'event',
+                            eventCategory: 'Sign Up Free',
+                            eventAction: 'click',
+                            eventLabel: 'Sign Up/Get Started - Click'
+                        });
+                    } else if(form =='refer') {
+                        //refere check Ok Response
+                        try {
+                            data = JSON.parse(data);
+                        } catch (e) { }
+                        if (data.status =='OK') {
+                            shipTime.referCode =  g_refercode;//code okay so copy to shipTime for further processing in signup
+                            showSuccessMessage('.success-form','#error-form-container', icw_lang_object.referred_success_start +' <strong>'+ data.result +'</strong> '+ icw_lang_object.referred_success_end);
+                            $('#signup').modal();
+                            $('#signup').modal('open');
+                            makeFocusInsideModal('#signup')
+                        } else {
+                            //showErrorMessage('.error-form','#error-form-container',data.message + ", Please try login with Login Button.");
+                        }
+                        return;
+                    } else {
+                        //check for recptcha
+                        /*if (jQuery("#hidden-grecaptcha").val() != "") {
+                            $('#btnSignup').attr("disabled", false);
+                        } else {
+                            $('#btnSignup').attr("disabled", "disabled");
+                        }*/
+
+                        //@JAY check for checkAgree start
+                        /*if (jQuery("#checkAgree").is(":checked")) {
+                            $('#btnSignup').attr("disabled", false);
+                        } else {
+                            $('#btnSignup').attr("disabled", "disabled");
+                        }*/
+                        //@JAY check for checkAgree end
+                    }
+                    // $("#frmSignup #btnSignup").attr("data-event", "__ga-footer-get-started");
+                    // $("#frmSignup #checkAgree").removeClass("__ga-top-signup");
+                    // $("#frmSignup #checkAgree").addClass("__ga-footer-get-started");
+                }
+            },
+
+            // Ajax call produced an error
+            function (xhr) {
+                // Message when an email is already in the database
+                if ((xhr.status == 409 || xhr.status == 409) && url.indexOf('redirect') > 0) {
+                    $('#btnSignup').attr("disabled", false);
+                    $('#btnSignup').html(icw_lang_object.start_shipping);
+
+                    showErrorMessage('.email-error','.formSignupEmail',icw_lang_object.account_already_exists);
+                    return;
+                }
+                if (xhr.status == 409 && (url.indexOf('contacts') > 0 || url.indexOf('plugins') > 0)) {
+                    if(form == 'frmGetStarted') {
+                        showErrorMessage('.getStartedEmail-error','.getStartedEmail',icw_lang_object.account_already_exists);
+                    } else {
+                        showErrorMessage('.email-error','.formSignupEmail',icw_lang_object.account_already_exists);
+                    }
+                }
+                //REFER errors
+                if (xhr.status == 404 && url.indexOf('contacts') > 0 && form =='refer') {
+                    //console.log("Error : " + JSON.stringify(xhr));
+                    showErrorMessage('.error-form','#error-form-container',icw_lang_object.referral_code_not_exist);
+                    $('#signup').modal();
+                    $('#signup').modal('open');
+                    makeFocusInsideModal('#signup')
+                    return;
+                }
+                // All other errors
+                if (xhr.status != 409 && (url.indexOf('contacts') > 0 || url.indexOf('plugins') > 0)) {
+                    $('#btnSignup').attr("disabled", false);
+                    $('#btnSignup').html(icw_lang_object.start_shipping);
+                    //console.log("Error : " + JSON.stringify(xhr));
+                    showErrorMessage('.error-form','#error-form-container',icw_lang_object.call_email_help);
+                }
+            }
+        )
+    };
+
+    initAccessCode();
+
+    shipTime.setBrandChannel = function (brand, channel, language) {
+        shipTime.brand = brand;
+        shipTime.channel = channel;
+        shipTime.language = language;
+    };
+
+    // ====================================================================
+    // Miscellaneous jQuery
+    // ====================================================================
+
+    // Set Brand and Channel Variables
+    //shipTime.brand = 'ShipTime';
+    //override on affiliation pages
+    //shipTime.channel = ($('body').hasClass('cc')) ? 'Costco' : 'Web';
+    //shipTime.channel = 'Web'; //default
+    //shipTime.setBrandChannel('ShipTime', 'Web'); //default
+    shipTime.brand = 'ShipTime';
+    shipTime.channel = 'Web';
+
+    function initAccessCode() {
+        $("#access-code").on('focus', function () {
+            if ($(this).val().indexOf('SHIP-') !== 0) {
+                $(this).val('SHIP-');
+            }
+            // $('label[for="access_code"]').hide();
+        });
+        $("#access-code").on('blur', function () {
+            if ($(this).val() == 'SHIP-'|| $(this).val().indexOf('SHIP-') !== 0) {
+                $(this).val('');
+            }
+        });
+        $("#access-code").keydown(function (e) {
+            var oldvalue = $(this).val();
+            var field = this;
+            setTimeout(function () {
+                if (field.value.indexOf('SHIP-') !== 0 && oldvalue != 'SHIP-') {
+                    $(field).val(oldvalue);
+                }
+            }, 1);
+        });
+    };
+
+    function IsAernum(aeroplannumber)
+    {
+        var regex = /^[0-9]{9}$/;
+        return regex.test(aeroplannumber);
+    }
+
+    // Signup Form, Validation of Email Existance.
+    $('.formSignupEmail').focusout(function (e) {
+        e.preventDefault();
+
+        if ($('.formSignupEmail').val() == "")
+        {
+            showErrorMessage('.email-error','.formSignupEmail', icw_lang_object.email_required);
+            return;
+        }
+
+        if (!isEmail($('.formSignupEmail').val())) {
+            showErrorMessage('.email-error','.formSignupEmail',icw_lang_object.email_invalide);
+            return;
+        }
+
+        //check its already checked in last request. Some how reducing request.
+        if (shipTime.email == $('.formSignupEmail').val()) {
+            return;
+        }
+
+        hidErrorMessage('.email-error','.formSignupEmail');
+
+        $('.email-error').remove();
+        $('.formSignupEmail').removeClass('invalid');
+        $('#btnSignup').attr("disabled", false);
+
+        // Store email in Global var
+        shipTime.email = $('.formSignupEmail').val();
+        var formGuid = '2c711e00-e3dc-411b-8d69-727955cc13a4';//$("#signup-form-try-quote :input[name='guid']").val();
+        shipTime.channel = 'Web';
+        shipTime.brand = 'V3';
+
+        // Submit the lead's email
+        shipTime.ajax({
+            email: shipTime.email,
+            channel: shipTime.channel,
+            brand: shipTime.brand,
+            guid: formGuid
+        }, '/contacts', 'frmSignup'); //, this.className.split(' ')[0]
+    });
+
+    // ====================================================================
+    // Form Submissions
+    // ====================================================================
+    $('#frmSignup').on('submit', function (e) {
+        e.preventDefault();
+
+        //validation.
+        if(IsMessageExist('.aeroplan-number-error') && g_subsite=='cfib')
+            return;
+
+        if(!IsValidated())
+            return;
+
+        //Call Google Analytics
+        const ga_event_btnsubmit = $('#frmSignup #btnSignup').attr('data-event');
+        if(ga_event_btnsubmit == '__ga-top-signup') {
+            // ga('send', 'event', 'signupstartshipping', 'click');
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'signupstartshipping',
+                eventAction: 'click',
+                eventLabel: 'Sign Up -> Start Shipping'
+            });
+        } else if(ga_event_btnsubmit == '__ga-footer-get-started') {
+            // ga('send', 'event', 'getstartedstartshipping', 'click');
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'getstartedstartshipping',
+                eventAction: 'click',
+                eventLabel: 'Get Started -> Start Shipping'
+            });
+        } else if(ga_event_btnsubmit == '__ga-popup-api-ship') {
+            // ga('send', 'event', 'getquotestartshipping', 'click');
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'getquotestartshipping',
+                eventAction: 'click',
+                eventLabel: 'Get Quote -> Ship -> Start Shipping'
+            });
+        }
+        // ga('send', 'event', 'Create Account', 'click');
+        fbq('track', 'CompleteRegistration');
+
+        shipTime.channel = 'Web';
+        shipTime.language = g_currentLang;
+
+        var data = {
+            email: shipTime.email,
+            brand: shipTime.brand,
+            channel: shipTime.channel,
+            password: $('#password').val(),
+            language: shipTime.language,
+            company:'',
+            firstname:'',
+            lastname:''
+        }
+
+        if($('#access-code').length && $('#access-code').val()) { //option so, if  have data then only send
+            data.agentAccessCode = $('#access-code').val();
+        }
+
+        //check refer for refer code
+        if(shipTime.referCode) {
+            data.referCode = shipTime.referCode;
+        }
+
+        switch(g_subsite)
+        {
+            case 'costco':
+                data.membership_num = $('#costco-membership').val();
+                data.membership_type = $('#drdMembershiptype').val();
+                break;
+            case 'cfib':
+                data = {
+                    email: shipTime.email,
+                    password: $('#password').val(),
+                    cfibMemberId: $('#cfib-membership').val(),
+                    lang: shipTime.language,
+                    brand: shipTime.brand,
+                    channel: shipTime.channel,
+                    commercialBusinessName:'',
+                    firstName:'',
+                    lastName:''
+                }
+                if($('#access-code').val()!="") { //option so, if  have data then only send
+                    data.agentAccessCode = $('#access-code').val();
+                    data.promoCode = $('#access-code').val();
+                }
+                if($('#cfib-aeroplan-number').val()!="") { //option so, if  have data then only send
+                    data.aeroplanNumber =  '627421' + $('#cfib-aeroplan-number').val();
+                }
+                break;
+            case 'cangift':
+                data.membership_type = 'ship-cangift';
+                break;
+            case 'cangift-members':
+                data.membership_type = 'ship-cangift-mem';
+                break;
+            case 'cca':
+                data.membership_type = 'ship-cca';
+                break;
+            case 'futurpreneur':
+                data.membership_type = 'ship-futurpreneur';
+                break;
+            case 'amex':
+                data.membership_type = 'ship-amex';
+                break;
+            case 'cedricmillar':
+                data.membership_type = 'ship-cmis';
+                break;
+            case 'lar':
+                data.membership_type = 'lar';
+                break;
+            case 'gain':
+                data.membership_type = 'ship-associum';
+                break;
+            case 'sales':
+                data.membership_type = 'ship-sales';
+                break;
+            case 'rcc':
+                data.membership_type = 'ship-rcc';
+                break;
+            case 'founderscard':
+                data.membership_type = 'ship-founders';
+                break;
+        }
+
+        if (g_subsite != 'cfib') {
+            utm_medium = localStorage.getItem("st_utm_medium");
+            utm_source = localStorage.getItem("st_utm_source");
+            utm_campaign = localStorage.getItem("st_utm_campaign");
+
+            if (utm_source && utm_source != null && utm_source != '') {
+                data.source = utm_source;
+            }
+            if (utm_medium && utm_medium != null && utm_medium != '') {
+                data.medium = utm_medium;
+            }
+            if (utm_campaign && utm_campaign != null && utm_campaign != '') {
+                data.campaign = utm_campaign;
+            }
+        }
+        /*utm_medium = localStorage.getItem("st_utm_medium");
+        utm_source = localStorage.getItem("st_utm_source");
+        utm_campaign = localStorage.getItem("st_utm_campaign");
+
+        if (utm_source && utm_source != null && utm_source != '') {
+            data.source = utm_source;
+        }
+        if (utm_medium && utm_medium != null && utm_medium != '') {
+            data.medium = utm_medium;
+        }
+        if (utm_campaign && utm_campaign != null && utm_campaign != '') {
+            data.campaign = utm_campaign;
+        }*/
+
+
+        // plugin subscription support
+        var signupUrl = shipTime.signupUrl || '/contacts/signupredirect';
+        $.extend(data, shipTime.signupOptions);
+
+        // submit the form
+        shipTime.ajax(data, signupUrl, g_subsite);
+    });
+
+    // Signup Form, Aeroplan Number
+    $('#cfib-aeroplan-number').focusout(function (e) {
+        var aeroplannumber = $('#cfib-aeroplan-number').val();
+        if(!IsAernum(aeroplannumber) && aeroplannumber.length >= 1) {
+            showErrorMessage('.aeroplan-number-error','._input-aeroplan-card .aeroplan-input-field',icw_lang_object.aeroplan_invalide);
+            return;
+        }
+        hidErrorMessage('.aeroplan-number-error','._input-aeroplan-card .aeroplan-input-field');
+    });
+
+    // Signup Form, Password
+    $('#password').focusout(function (e) {
+        if(IsEmpty('#password')) {
+            showErrorMessage('.error-password','#password',icw_lang_object.password_required);
+            return;
+        }
+        hidErrorMessage('.error-password','#password');
+
+        if($('#password').val().length <8) {
+            showErrorMessage('.error-password-length','#password',icw_lang_object.password_length);
+            return;
+        }
+        hidErrorMessage('.error-password-length','#password');
+
+        if($('#confirm-password').val()!=$('#password').val()) {
+            showErrorMessage('.error-confirm-password','#confirm-password',icw_lang_object.password_not_match);
+            return;
+        }
+        hidErrorMessage('.error-confirm-password','#confirm-password');
+    });
+
+    // Signup Form, confirm password
+    $('#confirm-password').focusout(function (e) {
+        if(IsEmpty('#confirm-password')) {
+            showErrorMessage('.error-confirm-password','#confirm-password',icw_lang_object.password_confirm);
+            return;
+        }
+        hidErrorMessage('.error-confirm-password','#confirm-password');
+
+        if($('#confirm-password').val()!=$('#password').val()) {
+            showErrorMessage('.error-confirm-password','#confirm-password',icw_lang_object.password_not_match);
+            return;
+        }
+        hidErrorMessage('.error-confirm-password','#confirm-password');
+    });
+
+    // Signup Form, Membership type (Costco)
+    $('#drdMembershiptype').focusout(function (e) {
+        if(IsEmpty('#drdMembershiptype')) {
+            showErrorMessage('.error-Membershiptype','#drdMembershiptype',icw_lang_object.membership_type_required,'coreControl');
+            return;
+        }
+        hidErrorMessage('.error-Membershiptype','#drdMembershiptype');
+    });
+
+    // Signup Form, costco-membership
+    $('#costco-membership').focusout(function (e) {
+        if(IsEmpty('#costco-membership')) {
+            showErrorMessage('.error-costco-membership','#costco-membership',icw_lang_object.membership_required);
+            return;
+        }
+        hidErrorMessage('.error-costco-membership','#costco-membership');
+    });
+
+    // Signup Form, cfib-membership
+    $('#cfib-membership').focusout(function (e) {
+        if(IsEmpty('#cfib-membership')) {
+            showErrorMessage('.error-cfib-membership','#cfib-membership',icw_lang_object.membership_required);
+            return;
+        }
+        hidErrorMessage('.error-cfib-membership','#cfib-membership');
+    });
+
+    //Validation
+    function IsValidated() {
+        if(IsMessageExist('.email-error')) {
+            $('.formSignupEmail').focus();
+            return false;
+        }
+
+        if(IsMessageExist('.error-password') || IsMessageExist('.error-password-length')) {
+            $('#password').focus();
+            return false;
+        }
+
+        if(IsMessageExist('.error-confirm-password')) {
+            $('#confirm-password').focus();
+            return false;
+        }
+
+        //cfib
+        if(IsMessageExist('.aeroplan-number-error')) {
+            $('#cfib-aeroplan-number').focus();
+            return false;
+        }
+
+        /*if (jQuery("#hidden-grecaptcha").val() == "") {
+            return false;
+        }*/
+        // @JAY
+
+        $cbx_checkAgree = $("input#checkAgree");
+        if (!$cbx_checkAgree.is(":checked")) {
+            $cbx_checkAgree.focus();
+            $cbx_checkAgree.prop("required", true).each(function() {
+                this.setCustomValidity(icw_lang_object.checkagree);
+            });
+            return false;
+        }
+
+        return true;
+    };
+    //----
+
+    $('#frmGetStarted').on('submit',function(e) {
+        resetSignUpForm();
+        e.preventDefault();
+
+        if ($('.getStartedEmail').val() == "") {
+            showErrorMessage('.getStartedEmail-error','.getStartedEmail',icw_lang_object.email_required);
+            return;
+        }
+
+        if (!isEmail($('.getStartedEmail').val())) {
+            showErrorMessage('.getStartedEmail-error','.getStartedEmail',icw_lang_object.email_invalide);
+            return;
+        }
+
+        //check its already checked in last request. Some how reducing request.
+        if (shipTime.email == $('.getStartedEmail').val()) {
+            return;
+        }
+
+        hidErrorMessage('.getStartedEmail-error','.getStartedEmail');
+
+        // Store email in Global var
+        shipTime.email = $('.getStartedEmail').val();
+        var formGuid = '2c711e00-e3dc-411b-8d69-727955cc13a4';//$("#signup-form-try-quote :input[name='guid']").val();
+        shipTime.channel = 'Web';
+        shipTime.brand = 'V3';
+
+        // Submit the lead's email
+        shipTime.ajax({
+            email: shipTime.email,
+            channel: shipTime.channel,
+            brand: shipTime.brand,
+            guid: formGuid
+        }, '/contacts', 'frmGetStarted') //, this.className.split(' ')[0]
+
+        return false;
+    });
+
+    //===================================
+    //For confirm password validation
+    //===================================
+
+    var password = document.getElementById("password")
+        ,confirm_password = document.getElementById("confirm-password");
+
+    function validatePassword() {
+        if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity(icw_lang_object.password_not_match);
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+
+        if (password.value.length < 8 && password.value.length > 0) {
+            password.setCustomValidity(icw_lang_object.password_length);
+        } else {
+            password.setCustomValidity('');
+        }
+    }
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+    password.onkeyup = validatePassword;
+
+    //================================================
+    //Modal Events
+    //================================================
+    $('a[href="#signup"]').on("click",function(){
+        resetSignUpForm();
+    });
+
+    function resetSignUpForm() {
+        $('.formSignupEmail').val("");
+        hidErrorMessage('.email-error','.formSignupEmail');
+
+        $('#password').val("");
+        hidErrorMessage('.error-password','#password');
+        hidErrorMessage('.error-password-length','#password');
+
+        $('#confirm-password').val("");
+        hidErrorMessage('.error-confirm-password','#confirm-password');
+
+        $('#access-code').val("");
+        hidErrorMessage('.error-form','#error-form-container');
+
+        //cfib
+        $('#cfib-aeroplan-number').val("");
+        hidErrorMessage('.aeroplan-number-error','._input-aeroplan-card .aeroplan-input-field');
+
+        $('#cfib-membership').val("");
+        hidErrorMessage('.error-cfib-membership', '#cfib-membership');
+
+        //costco
+        $('#costco-membership').val("");
+        hidErrorMessage('.error-costco-membership', '#costco-membership');
+
+        $('#drdMembershiptype').val("");
+        hidErrorMessage('.error-Membershiptype', '#drdMembershiptype');
+
+        shipTime.email='';
+
+        //var $button = jQuery("#btnSignup");
+        //$button.attr("disabled", "disabled");
+        //@jay grecaptcha.reset();
+    }
+
+    function redirectToLogin(){
+        if($("#lnkLogin").length >0) {
+            //from DOM
+            window.location = $("#lnkLogin").attr("href");
+        } else {
+            //from Config
+            window.location = login_url;
+        }
+    };
+});
+

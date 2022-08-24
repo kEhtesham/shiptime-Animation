@@ -1,0 +1,1018 @@
+function setSelectedValue(selectObj, valueToSet) {
+    for (var i = 0; i < selectObj.options.length; i++) {
+        if (selectObj.options[i].value == valueToSet) {
+            alert(selectObj.options[i].value);
+            selectObj.options[i].selected = true;
+            return;
+        }
+    }
+}
+
+function quoteCatagory(evt, catagory) {
+    var tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    packagetype = catagory;
+    document.getElementById("Package").style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+var packagetype = "PACKAGE";
+
+var geocoder;
+var map;
+var origin = 0;
+var org_zipcode = '';
+var dest_zipcode = '';
+var destination = 0;
+var weight = '';
+var placeholderContent = '';
+var isDev = false;
+
+function origincodeAddress() {
+    var l_lblText = jQuery('#lblOriginZip').html();
+    jQuery('.org-zip-code-error').remove();
+    org_zipcode = '';
+
+    var err_id = jQuery('#org_zip_code').attr('aria-describedby')
+    var originZip = jQuery('#org_zip_code').val();
+    if (jQuery('#org_zip_code').val() == '') {
+        jQuery('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblText + '</span>');
+        jQuery('#org_zip_code').addClass('invalid');
+    } else if (!(originZip.length >= 4 && originZip.length <= 10)) {
+        jQuery('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#org_zip_code').addClass('invalid');
+    } else if (jQuery('#origin').val() == 'CA' && !(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(jQuery('#org_zip_code').val()))) {
+        jQuery('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#org_zip_code').addClass('invalid');
+    } else if (jQuery('#origin').val() == 'US' && !(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(jQuery('#org_zip_code').val()))) {
+        jQuery('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#org_zip_code').addClass('invalid');
+    } else {
+        jQuery('#org_zip_code').addClass('__loader');
+        jQuery('#org_zip_code').removeClass('invalid');
+        org_zipcode = jQuery('#org_zip_code').val();
+
+        geocoder = new google.maps.Geocoder();
+        var countryCode = jQuery('#origin').val();
+        var address = document.getElementById('org_zip_code').value;
+        var option = {
+            componentRestrictions: {
+                postalCode: address
+            }
+        }
+        if (countryCode != 0) {
+            option.componentRestrictions.country = countryCode;
+        }
+        geocoder.geocode(option, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK && results.length == 1) {
+                var adr = results[0]['address_components'];
+                var cityname = adr.find(function (element) {
+                    return element.types.indexOf("locality") > -1;
+                });
+
+                var country = adr.find(function (element) {
+                    return element.types.indexOf("country") > -1;
+                });
+
+                jQuery('#origin').val(country['short_name']);
+                jQuery('#origin').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                jQuery('#destination').val('0');
+                jQuery('#destination').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                jQuery('#destination_fromUs').val('0');
+                jQuery('#destination_fromUs').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                jQuery('#origin').trigger('change');
+                jQuery('#destination').trigger('change');
+                jQuery('#destination_fromUs').trigger('change');
+
+                jQuery('.destination-error').remove();
+
+                if (country['short_name'] == 'CA') {
+                    jQuery('#lblOriginZip').html(icw_lang_object.postal_code);
+                    jQuery('#org_zip_code').attr('maxlength', '7');
+                } else {
+                    jQuery('#lblOriginZip').html(icw_lang_object.zip_code);
+                    jQuery('#org_zip_code').attr('maxlength', '10');
+                }
+
+                if (cityname) {
+                    jQuery('#origin_city').val(cityname['long_name']);
+                }
+
+                var statename = adr.find(function (element) {
+                    return element.types.indexOf("administrative_area_level_1") > -1;
+                });
+
+                if (statename) {
+                    jQuery('#origin_state').val(statename['short_name']);
+                }
+
+                var streetNumber = adr.find(function (element) {
+                    return element.types.indexOf("street_number") > -1;
+                });
+                var route = adr.find(function (element) {
+                    return element.types.indexOf("route") > -1;
+                });
+
+                var streetAddFirst;
+                if (streetNumber) {
+                    streetAddFirst = streetNumber['long_name'];
+                }
+                if (route) {
+                    if (streetAddFirst) {
+                        streetAddFirst = streetAddFirst + ", " + route['long_name'];
+                    } else {
+                        streetAddFirst = route['long_name'];
+                    }
+                }
+                if (streetAddFirst) {
+                    jQuery('#origin_add_one').val(streetAddFirst);
+                } else {
+                    jQuery('#origin_add_one').val("Test address");
+                }
+
+                var streetAddTwo = adr.find(function (element) {
+                    return element.types.indexOf("administrative_area_level_2") > -1;
+                });
+                if (streetAddTwo) {
+                    jQuery('#origin_add_two').val(streetAddTwo['long_name']);
+                } else {
+                    jQuery('#origin_add_two').val("From test addr2");
+                }
+                jQuery('#org_zip_code').removeClass('__loader');
+
+                if (origin == 0 && destination == 0 && org_zipcode != '' && dest_zipcode != '' && weight != '') {
+                    jQuery('#get-quote-button').prop('disabled', false);
+                }
+                else {
+                    jQuery('#get-quote-button').prop('disabled', true);
+                }
+            } else {
+                jQuery('.org-zip-code-error').remove();
+                jQuery('#org_zip_code').removeClass('__loader');
+
+                jQuery('#destination1').show();
+                jQuery('#destination2').hide();
+
+                jQuery('#destination').prop('disabled', false);
+                jQuery("#destination").val('0');
+                jQuery('#destination').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                jQuery('#destination_fromUs').prop('disabled', false);
+                jQuery("#destination_fromUs").val('0');
+                jQuery('#destination_fromUs').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                jQuery('.destination-error').remove();
+                if (origin == 0 && destination == 0 && org_zipcode != '' && dest_zipcode != '' && weight != '') {
+                    jQuery('#get-quote-button').prop('disabled', false);
+                }
+                else {
+                    jQuery('#get-quote-button').prop('disabled', true);
+                }
+                jQuery('#origin_city').val('');
+                jQuery('#origin_state').val('');
+                jQuery('#origin_add_one').val('');
+                jQuery('#origin_add_two').val('');
+
+            }
+        });
+    }
+}
+
+function destcodeAddress() {
+    jQuery('.dest-zip-code-error').remove();
+    var l_lblText = jQuery('#lblDestinationZip').html();
+    dest_zipcode = '';
+
+    var err_id = jQuery('#dest_zip_code').attr('aria-describedby')
+    var destZip = jQuery('#dest_zip_code').val();
+    if (jQuery('#dest_zip_code').val() == '') {
+        jQuery('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblText + '</span>');
+        jQuery('#dest_zip_code').addClass('invalid');
+    } else if (!(destZip.length >= 4 && destZip.length <= 10)) {
+        jQuery('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#dest_zip_code').addClass('invalid');
+    } else if ((jQuery('#destination').val() == 'CA' || jQuery('#destination_fromUs').val() == 'CA') && !(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(jQuery('#dest_zip_code').val()))) {
+        jQuery('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#dest_zip_code').addClass('invalid');
+    } else if ((jQuery('#destination').val() == 'US'  || jQuery('#destination_fromUs').val() == 'US') && !(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(jQuery('#dest_zip_code').val()))) {
+        jQuery('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+        jQuery('#dest_zip_code').addClass('invalid');
+    } else {
+        dest_zipcode = jQuery('#dest_zip_code').val();
+        jQuery('.dest-zip-code-error').remove();
+        jQuery('#dest_zip_code').parent().removeClass('invalid');
+        jQuery('#dest_zip_code').addClass('__loader');
+        jQuery('#dest_zip_code').removeClass('invalid');
+
+        geocoder = new google.maps.Geocoder();
+        var countryCode = jQuery('#destination').val();
+        var address = document.getElementById('dest_zip_code').value;
+        var option = {
+            componentRestrictions: {
+                postalCode: address
+            }
+        }
+        if (countryCode != 0) {
+            option.componentRestrictions.country = countryCode;
+        }
+        geocoder.geocode(option, function (results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK && results.length == 1) {
+                var adr = results[0]['address_components'];
+                var cityname = adr.find(function (element) {
+                    return element.types.indexOf("locality") > -1;
+                });
+
+                if (cityname) {
+                    jQuery('#dest_city').val(cityname['long_name']);
+                }
+
+                var country = adr.find(function (element) {
+                    return element.types.indexOf("country") > -1;
+                });
+
+
+                //var isDisabled = $('textbox').prop('disabled');
+                var l_origin_US = (jQuery('#origin').val() == 'US');
+                var l_origin_CA = (jQuery('#origin').val() == 'CA');
+                var l_InvalidZip = false;
+
+                if (l_origin_US) {
+                    if (country['short_name'] == 'US' || country['short_name'] == 'CA') {
+                        //continue
+                    } else {
+                        //error invalid zip
+                        l_InvalidZip = true;
+                    }
+                } else if (!l_origin_CA) {
+                    if (country['short_name'] == 'CA') {
+                        //continue
+                    } else {
+                        //error invalid zip
+                        l_InvalidZip = true;
+                    }
+                }
+
+                if (l_InvalidZip) {
+                    jQuery('#dest_zip_code').removeClass('__loader');
+                    jQuery('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red">' + icw_lang_object.zipcode_invalid + ' ' + l_lblText + '</span>');
+                    jQuery('#dest_zip_code').parent().addClass('invalid');
+                    jQuery('#dest_city').val('');
+                    jQuery('#dest_state').val('');
+                    jQuery('#dest_add_one').val('');
+                    jQuery('#dest_add_two').val('');
+                    jQuery('#dest_zip_code').addClass('invalid');
+                    return;
+                }
+
+
+                if (document.getElementById('destination1').style.display !== 'none') {
+                    jQuery('#destination_fromUs').val(country['short_name']);
+                    jQuery('#destination_fromUs').select2({
+                        minimumResultsForSearch: 10
+                    });
+                }
+
+                if (document.getElementById('destination2').style.display !== 'none') {
+                    jQuery('#destination').val(country['short_name']);
+                    jQuery('#destination').select2({
+                        minimumResultsForSearch: 10
+                    });
+                }
+
+                if (country['short_name'] == 'CA') {
+                    jQuery('#lblDestinationZip').html(icw_lang_object.postal_code);
+                    jQuery('#dest_zip_code').attr('maxlength', '7');
+                } else {
+                    jQuery('#lblDestinationZip').html(icw_lang_object.zip_code);
+                    jQuery('#dest_zip_code').attr('maxlength', '10');
+
+                }
+
+                var statename = adr.find(function (element) {
+                    return element.types.indexOf("administrative_area_level_1") > -1;
+                });
+
+                if (statename) {
+                    jQuery('#dest_state').val(statename['short_name']);
+                }
+
+                var streetNumber = adr.find(function (element) {
+                    return element.types.indexOf("street_number") > -1;
+                });
+                var route = adr.find(function (element) {
+                    return element.types.indexOf("route") > -1;
+                });
+
+                var streetAddFirst;
+                if (streetNumber) {
+                    streetAddFirst = streetNumber['long_name'];
+                }
+                if (route) {
+                    if (streetAddFirst) {
+                        streetAddFirst = streetAddFirst + ", " + route['long_name'];
+                    } else {
+                        streetAddFirst = route['long_name'];
+                    }
+                }
+                if (streetAddFirst) {
+                    jQuery('#dest_add_one').val(streetAddFirst);
+                } else {
+                    jQuery('#dest_add_one').val("Test address");
+                }
+
+                var streetAddTwo = adr.find(function (element) {
+                    return element.types.indexOf("administrative_area_level_2") > -1;
+                });
+                if (streetAddTwo) {
+                    jQuery('#dest_add_two').val(streetAddTwo['long_name']);
+                } else {
+                    jQuery('#dest_add_two').val("From test addr2");
+                }
+                jQuery('#dest_zip_code').removeClass('__loader');
+
+                if (origin == 0 && destination == 0 && org_zipcode != '' && dest_zipcode != '' && weight != '') {
+                    jQuery('#get-quote-button').prop('disabled', false);
+                }
+                else {
+                    jQuery('#get-quote-button').prop('disabled', true);
+                }
+            } else {
+                jQuery('#dest_zip_code').removeClass('__loader');
+                jQuery('#dest_city').val('');
+                jQuery('#dest_state').val('');
+                jQuery('#dest_add_one').val('');
+                jQuery('#dest_add_two').val('');
+            }
+        });
+    }
+}
+
+
+jQuery(function ($) {
+
+    function hidErrorMessage(f_msgId, f_field) {
+        if (IsMessageExist(f_msgId))
+            $(f_msgId).remove();
+
+        $(f_field).removeClass('invalid');
+    }
+
+    function IsMessageExist(f_msgId) {
+        var $msg = jQuery(f_msgId);
+        return ($msg.length > 0);
+    }
+
+    function showErrorMessage(f_msgId, f_field, f_msg, f_ExtraCssClass) {
+        if (IsMessageExist(f_msgId))
+            $(f_msgId).remove();
+
+        var err_id = $(f_field).attr('aria-describedby')
+        console.log('err_id::', err_id)
+
+            // .parent()
+
+        if (f_msgId == ".error-form")
+            $(f_field).after('<span style=\'position:relative !important;\' class="error ' + f_msgId.substring(1, f_msgId.length) + ' quote-red" id="' + err_id + '">' + f_msg + '</span>');
+        else if (err_id == "length_err" || err_id == "width_err" || err_id == "height_err")
+            $(f_field).parent().parent().after('<span class="error ' + f_msgId.substring(1, f_msgId.length) + ' ' + f_ExtraCssClass + ' quote-red" id="' + err_id + '">' + f_msg + '</span>');
+        else
+            $(f_field).after('<span class="error ' + f_msgId.substring(1, f_msgId.length) + ' ' + f_ExtraCssClass + ' quote-red" id="' + err_id + '">' + f_msg + '</span>');
+
+        $(f_field).addClass('invalid');
+    }
+
+    function validateDimensions() {
+        let isValid = true;
+        var l_length = parseFloat($('#length').val());
+        var l_width = parseFloat($('#width').val());
+        var l_height = parseFloat($('#height').val());
+
+        const maxDomesticDim = 120;
+        let maxLengthDims = maxDomesticDim;
+        let maxWidthDims = maxDomesticDim;
+        let maxHeightDims = maxDomesticDim;
+
+        const maxInternationalDim = 108;
+        let maxDimSummary = 165;
+
+        let maxDim = maxDomesticDim;
+        if ($('#origin').val() != $('#destination').val()) {
+            maxLengthDims = maxInternationalDim;
+            maxWidthDims = maxInternationalDim;
+            maxHeightDims = maxInternationalDim;
+        }
+
+        if (packagetype == "PALLET") {
+            maxLengthDims = 140;
+            maxWidthDims = 92;
+            maxHeightDims = 96;
+        }
+
+        hidErrorMessage('.length-error', '.length');
+        hidErrorMessage('.width-error', '.width');
+        hidErrorMessage('.height-error', '.height');
+
+        if ($('#length').val() == "") {
+            showErrorMessage('.length-error', '.length', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        if ($('#width').val() == "") {
+            showErrorMessage('.length-error', '.width', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        if ($('#height').val() == "") {
+            showErrorMessage('.length-error', '.height', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        if (l_length < 0 || l_length > maxLengthDims) {
+            showErrorMessage('.length-error', '.length', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        if (l_width < 0 || l_width > maxWidthDims) {
+            showErrorMessage('.width-error', '.width', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        if (l_height < 0 || l_height > maxHeightDims) {
+            showErrorMessage('.height-error', '.height', icw_lang_object.enter_valid_dimensions);
+            isValid = false;
+        }
+
+        let array = [];
+        array.push(l_length);
+        array.push(l_width);
+        array.push(l_height);
+        array.sort();
+        if (packagetype != "PALLET" && (array[2] + (2 * (array[1] + array[0]))) > maxDimSummary) {
+            showErrorMessage('.length-error', '.length', '');
+            showErrorMessage('.width-error', '.width', '');
+            showErrorMessage('.height-error', '.height', icw_lang_object.dim_sum_exceed + " " + maxDimSummary + " ins");
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    function validateEmail() {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!$('#email').val() || $('#email').val() == '') {
+            showErrorMessage('.email-error', '.email', icw_lang_object.email_required);
+            return false;
+        } else if (!regex.test($('#email').val())) {
+            showErrorMessage('.email-error', '.email', icw_lang_object.email_invalide);
+            return false;
+        }
+        hidErrorMessage('.email-error', '.email');
+        return true;
+    }
+
+    function validateWeight() {
+        var l_Weight = parseFloat($('#weight').val());
+        var l_Unit = 'LB';
+        if ($('#unit').val() && $('#unit').val() != '') {
+            var l_Unit = $('#unit').val();
+        }
+        var maxWeight = 150;
+        if (packagetype == "PALLET") {
+            maxWeight = 3000;
+        }
+        hidErrorMessage('.weight-error', '.weight');
+
+        if ($('#weight').val() == "") {
+            showErrorMessage('.weight-error', '.weight', icw_lang_object.enter_weight);
+            return false;
+        }
+
+        if (l_Unit == 'LB') {
+            if (l_Weight < 0 || l_Weight > maxWeight) {
+                showErrorMessage('.weight-error', '.weight', icw_lang_object.weight_between_0_150lbs + " " + maxWeight + ' lbs');
+                return false;
+            }
+        } else if (l_Unit == 'KG') {
+            if (l_Weight < 0 || l_Weight > 68) {
+                showErrorMessage('.weight-error', '.weight', icw_lang_object.weight_between_0_68kg);
+                return false;
+            }
+        }
+        hidErrorMessage('.weight-error', '.weight');
+        return true;
+    }
+
+    $('#origin').change(function () {
+        //change label
+        $('#lblOriginZip').html(icw_lang_object.zip_code);//default
+        $('#org_zip_code').attr('maxlength', '10');//default
+        $('#dest_zip_code').attr('maxlength', '10');//default
+        $('#org_zip_code').attr('placeholder', '12345');//default
+
+        $('#dest_zip_code').val('');
+        hidErrorMessage('.org-zip-code-error', '#org_zip_code');
+        hidErrorMessage('.dest-zip-code-error', '#dest_zip_code');
+
+        $("#destination").val('0');
+        $('#destination').select2({
+            minimumResultsForSearch: 10
+        });
+
+        $("#destination_fromUs").val('0');
+        $('#destination_fromUs').select2({
+            minimumResultsForSearch: 10
+        });
+
+        if ($('#origin').val() == 'SG' || $('#origin').val() == 'HK') {
+            $('.zip_code').css('display', 'none');
+            $('#origin').parents('.input-field').removeClass('s7');
+            $('#origin').parents('.input-field').addClass('s12');
+        }
+        else {
+            $('.zip_code').css('display', 'block');
+            $('#origin').parents('.input-field').removeClass('s12');
+            $('#origin').parents('.input-field').addClass('s7');
+        }
+
+        if ($('#origin').val() == 'US') {
+            $('#destination1').show();
+            $('#destination2').hide();
+
+            $('#destination').prop('disabled', false);
+            $("#destination").val('0');
+            $('#destination').select2({
+                minimumResultsForSearch: 10
+            });
+
+            $("#destination_fromUs").val('0');
+            $('#destination_fromUs').select2({
+                minimumResultsForSearch: 10
+            });
+
+            //change label
+            $('#lblDestinationZip').html(icw_lang_object.postal_code);
+        } else if ($('#origin').val() == 'CA') {
+            $('#org_zip_code').attr('placeholder', 'A1A1A1');
+            $('#destination1').hide();
+            $('#destination2').show();
+
+            $('#destination').prop('disabled', false);
+            $("#destination").val('0');
+            $('#destination').select2({
+                minimumResultsForSearch: 10
+            });
+
+            $('#destination_fromUs').prop('disabled', false);
+            $("#destination_fromUs").val('0');
+            $('#destination_fromUs').select2({
+                minimumResultsForSearch: 10
+            });
+
+            //change label
+            $('#lblOriginZip').html(icw_lang_object.postal_code);
+            $('#org_zip_code').attr('maxlength', '7');
+            //change label
+            $('#lblDestinationZip').html(icw_lang_object.postal_code);
+        } else {
+            if ($('#origin').val() != '0') {
+                $('#destination1').hide();
+                $('#destination2').show();
+
+                $('#destination').prop('disabled', true);
+                var ctr = 'CA';
+                $("#destination").val(ctr);
+                $('#destination').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                $("#destination_forUs").val(ctr);
+                $('#destination_forUs').select2({
+                    minimumResultsForSearch: 10
+                });
+
+                //change label
+                $('#lblDestinationZip').html(icw_lang_object.postal_code);
+                $('#dest_zip_code').attr('placeholder', 'A1A1A1');
+                $('#dest_zip_code').attr('maxlength', '7');
+            } else {
+                //default
+                $('#lblOriginZip').html(icw_lang_object.postal_code);//default
+                $('#org_zip_code').attr('maxlength', '7');//default
+            }
+        }
+    });
+
+    function onchangDestination(f_SelectControl) {
+        var err_id = $(f_SelectControl).attr('aria-describedby')
+        $('#lblDestinationZip').html(icw_lang_object.zip_code);
+        $('#dest_zip_code').attr('maxlength', '10');//default
+        $('#dest_zip_code').val('');
+        $('#dest_zip_code').attr('placeholder', '12345');
+        hidErrorMessage('.dest-zip-code-error', '#dest_zip_code');
+
+        if ($(f_SelectControl).val() == 0) {
+            $(f_SelectControl).parent().after('<span class="error destination-error quote-red" id="' + err_id + '">' + icw_lang_object.select_destination + '</span>');
+            $(f_SelectControl).parent().parent().addClass('invalid');
+        } else {
+            $('.destination-error').remove();
+            $(f_SelectControl).parent().parent().parent().removeClass('invalid');
+        }
+
+        if ($(f_SelectControl).val() == 'CA') {
+            $('#lblDestinationZip').html(icw_lang_object.postal_code);
+            $('#dest_zip_code').attr('maxlength', '7');
+            $('#dest_zip_code').attr('placeholder', 'A1A1A1');
+        }
+    }
+
+    $('#destination_fromUs').change(function () {
+        onchangDestination('#destination_fromUs');
+    });
+    $('#destination').change(function () {
+        onchangDestination('#destination');
+    });
+
+
+    $('#org_zip_code').keyup(function () {
+        if ($('#org_zip_code').val() == '') {
+            var err_id = $('#org_zip_code').attr('aria-describedby')
+            var l_lblText = $('#lblOriginZip').html();
+            $('.org-zip-code-error').remove();
+            $('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblText + '</span>');
+            //$('#org_zip_code').parent().addClass('invalid');
+            $('#org_zip_code').addClass('invalid');
+            org_zipcode = '';
+        }
+        else {
+            $('.org-zip-code-error').remove();
+            $('#org_zip_code').removeClass('invalid');
+        }
+
+        if (org_zipcode != '' && dest_zipcode != '' && weight != '') {
+            $('#get-quote-button').prop('disabled', false);
+        }
+        else {
+            $('#get-quote-button').prop('disabled', true);
+        }
+    });
+
+
+    $('#dest_zip_code').keyup(function () {
+        if ($('#dest_zip_code').val() == '') {
+            var err_id = $('#dest_zip_code').attr('aria-describedby')
+            var l_lblText = $('#lblDestinationZip').html();
+            dest_zipcode = '';
+            $('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblText + '</span>');
+            //$('#dest_zip_code').parent().addClass('invalid');
+            $('#dest_zip_code').addClass('invalid');
+        }
+        else {
+            $('.dest-zip-code-error').remove();
+            $('#dest_zip_code').parent().removeClass('invalid');
+            dest_zipcode = $('#dest_zip_code').val();
+        }
+
+        if (org_zipcode != '' && dest_zipcode != '' && weight != '') {
+            $('#get-quote-button').prop('disabled', false);
+        }
+        else {
+            $('#get-quote-button').prop('disabled', true);
+        }
+    });
+
+    $('#weight').keyup(function () {
+        if ($('#weight').val() == '') {
+            var err_id = $('#weight').attr('aria-describedby')
+            $('#weight').after('<span class="error weight-error quote-red" id="' + err_id + '">' + icw_lang_object.enter_weight + '</span>');
+            $('#weight').addClass('invalid');
+            weight = $('#weight').val();
+        }
+        else {
+            $('.weight-error').remove();
+            $('#weight').removeClass('invalid');
+            weight = $('#weight').val();
+            //$('#get-quote-button').prop('disabled',false);
+        }
+
+
+        if (org_zipcode != '' && dest_zipcode != '' && weight != '') {
+            $('#get-quote-button').prop('disabled', false);
+        }
+        else {
+            $('#get-quote-button').prop('disabled', true);
+        }
+    });
+
+    $('.get-quote').click(function () {
+
+        if (!validateWeight() || !validateDimensions())
+            return;
+
+        $('.error').remove();
+        var origin = $('#origin').val();
+        var org_zipcode = $('#org_zip_code').val();
+        var dest_zipcode = $('#dest_zip_code').val();
+        var destination;
+        var length = $('#length').val();
+        var width = $('#width').val();
+        var height = $('#height').val();
+
+        if (document.getElementById('destination1').style.display !== 'none') {
+            destination = $('#destination_fromUs').val();
+            $('#destination').val(destination);
+        }
+
+        $('#packagetype').val(packagetype);
+
+        if ($('#dest_state').val() === '') {
+            $('#dest_state').val('abc');
+        }
+
+        if ($('#dest_city').val() === '') {
+            $('#dest_city').val('abc');
+        }
+
+        if ($('#dest_add_one').val() === '') {
+            $('#dest_add_one').val('abc');
+        }
+
+        if ($('#dest_add_two').val() === '') {
+            $('#dest_add_two').val('abc');
+        }
+
+        if ($('#origin_state').val() === '') {
+            $('#origin_state').val('abc');
+        }
+
+        if ($('#origin_city').val() === '') {
+            $('#origin_city').val('abc');
+        }
+
+        if ($('#origin_add_one').val() === '') {
+            $('#origin_add_one').val('abc');
+        }
+
+        if ($('#origin_add_two').val() === '') {
+            $('#origin_add_two').val('abc');
+        }
+
+        if (document.getElementById('destination2').style.display !== 'none') {
+            destination = $('#destination').val();
+            $('#destination_fromUs').val(destination);
+        }
+
+        var weight = $('#weight').val();
+        var unit = $('#unit').val();
+        var l_lblOriginText = $('#lblDestinationZip').html();
+        var l_lblDestinationText = $('#lblDestinationZip').html();
+
+        if (origin == 0 && destination == 0 && org_zipcode == '' && dest_zipcode == '' && weight == '') {
+            var origin_err_id = $('#origin').attr('aria-describedby')
+            var org_zip_code_err_id = $('#org_zip_code').attr('aria-describedby')
+            var dest_zip_code_err_id = $('#dest_zip_code').attr('aria-describedby')
+            var destination_err_id = $('#destination').attr('aria-describedby')
+            var weight_err_id = $('#weight').attr('aria-describedby')
+
+            $('#origin').parent().after('<span class="error origin-error quote-red" id="' + origin_err_id + '">' + icw_lang_object.select_origin + '</span>');
+            $('#origin').addClass('invalid');
+
+            $('#org_zip_code').after('<span class="error origin-zip-code-error quote-red" id="' + org_zip_code_err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblOriginText + '</span>');
+            $('#org_zip_code').addClass('invalid');
+            $('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + dest_zip_code_err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblDestinationText + '</span>');
+            $('#dest_zip_code').addClass('invalid');
+            $('#destination').parent().after('<span class="error destination-error quote-red" id="' + destination_err_id + '">' + icw_lang_object.select_destination + '</span>');
+            $('#destination').addClass('invalid');
+            $('#weight').after('<span class="error weight-error quote-red" id="' + weight_err_id + '">' + icw_lang_object.enter_weight + '</span>');
+            $('#weight').addClass('invalid');
+        }
+        else if (origin == 0) {
+            var err_id = $('#origin').attr('aria-describedby')
+            // M.toast({html: '<i class="fa fa-refresh fa-spin fa-fw"></i><span> Loading...</span>', displayLength: '3000', classes: 'green rounded'})
+            $('#origin').parent().after('<span class="error origin-error quote-red" id="' + err_id + '">' + icw_lang_object.select_origin + '</span>');
+            $('#origin').addClass('invalid');
+        }
+        else if (org_zipcode == '') {
+            var err_id = $('#org_zip_code').attr('aria-describedby')
+            $('.org-zip-code-error').remove();
+            $('#org_zip_code').after('<span class="error org-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblOriginText + '</span>');
+            $('#org_zip_code').addClass('invalid');
+        }
+        else if (destination == 0) {
+            var err_id = $('#destination').attr('aria-describedby')
+            $('#destination').parent().after('<span class="error destination-error quote-red" id="' + err_id + '">' + icw_lang_object.select_destination + '</span>');
+            $('#destination').addClass('invalid');
+        }
+        else if (dest_zipcode == '') {
+            var err_id = $('#dest_zip_code').attr('aria-describedby')
+            $('#dest_zip_code').after('<span class="error dest-zip-code-error quote-red" id="' + err_id + '">' + icw_lang_object.please_enter + ' ' + l_lblDestinationText + '</span>');
+            $('#dest_zip_code').addClass('invalid');
+        }
+        else if (weight == '') {
+            var err_id = $('#weight').attr('aria-describedby')
+            $('#weight').after('<span class="error weight-error quote-red" id="' + err_id + '">' + icw_lang_object.enter_weight + '</span>');
+            $('#weight').addClass('invalid');
+        }
+        else {
+            if (!isDev) {
+                $.ajax({
+                    type: 'post',
+                    url: icw_lang_object.icwtheme + '/api/api-get-quote-request.php',
+                    data: $("#quoteForm").serialize(),
+                    beforeSend: function () {
+                        $('.quote-error-message').remove();
+                        $('#quoteDataForm .modal-content').html('');
+                        // M.toast({html: '<i class="fa fa-refresh fa-spin fa-fw"></i><span> Loading...</span>', displayLength: '20000', classes: 'green rounded'})
+                        $('.get-quote').html('<i class="fa fa-refresh fa-spin fa-fw"></i><span> ' + icw_lang_object.fetching_rates + '</span>');
+                        $('.get-quote').prop('disabled', true);
+                    },
+                    success: function (json) {
+                        fbq('track', 'Lead');
+                        if (json['data']['error']) {
+                            //M.Toast.dismissAll();
+                            $('#quote-row').before('<div aria-live="polite"><span class="quote-error-message">' + json['data']['error'] + '</span></div>');
+                            $('.get-quote').html(icw_lang_object.get_quote);
+                            $('.get-quote').prop('disabled', false);
+                            //M.toast({html: json['data']['error'], classes: 'red rounded'})
+                        } else {
+                            $('#quoteDataForm .modal-content').html(json['data']['html']);
+
+                            jQuery('#quoteDataFormBtn').trigger('click');
+                            //M.Toast.dismissAll();
+
+                            $('#quoteForm #org_zip_code').val('');
+                            $('#quoteForm #dest_zip_code').val('');
+                            $('#quoteForm #weight').val('');
+
+                            if ($('#quoteForm input').hasClass('valid')) {
+                                $('#quoteForm input').removeClass('valid')
+                            }
+                            //$('#quoteForm  #origin option[value="0"]').prop('selected', true);
+                            //$('#quoteForm  #destination option[value="0"]').prop('selected', true);
+                            //  $('#quoteForm select').html('');
+                            $('quoteForm input').removeClass('invalid');
+                            $('quoteForm input').removeClass('valid');
+                            $('#origin').next('span').removeClass('invalid');
+                            $('#destination').next('span').removeClass('invalid');
+                            $('.get-quote').html(icw_lang_object.get_quote);
+                            $('.get-quote').prop('disabled', false);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        //console.log(xhr.status);
+                        //console.log(thrownError);
+                        //sconsole.log(xhr.responseText);
+                        if (xhr.status == 500) {
+                            $('#quote-row').before('<div aria-live="polite"><span class="quote-error-message">' + icw_lang_object.server_error + '</span></div>');
+                            $('.get-quote').html(icw_lang_object.get_quote);
+                            $('.get-quote').prop('disabled', false);
+                        }
+                    }
+                });
+            } else {
+                if (placeholderContent && placeholderContent != '') {
+                    $('#quoteDataForm .modal-content').html(placeholderContent);
+                }
+                jQuery('#quoteDataFormBtn').trigger('click');
+                setTimeout(function () {
+                    jQuery('#quoteEmailForm').show();
+                }, 300);
+
+            }
+        }
+    });
+
+    $('#btnShowRates').click(function () {
+        if (!validateEmail()) {
+            return
+        }
+        $.ajax({
+            type: 'post',
+            url: icw_lang_object.icwtheme + '/api/api-get-quote-request.php',
+            data: $("#quoteForm").serialize() + '&' + $("#frmQuoteEmail").serialize(),
+            beforeSend: function () {
+                $('.quote-error-message').remove();
+                // $('#quoteDataForm .modal-content').html('');
+                // M.toast({html: '<i class="fa fa-refresh fa-spin fa-fw"></i><span> Loading...</span>', displayLength: '20000', classes: 'green rounded'})
+                $('#btnShowRates').html('<i class="fa fa-refresh fa-spin fa-fw"></i><span> ' + icw_lang_object.fetching_rates + '</span>');
+                $('#btnShowRates').prop('disabled', true);
+            },
+            success: function (json) {
+                jQuery('#quoteEmailForm').hide();
+                fbq('track', 'Lead');
+                if (json['data']['error']) {
+                    //M.Toast.dismissAll();
+                    $('#quote-row').before('<div aria-live="polite"><span class="quote-error-message">' + json['data']['error'] + '</span></div>');
+                    $('.get-quote').html(icw_lang_object.get_quote);
+                    $('.get-quote').prop('disabled', false);
+                    //M.toast({html: json['data']['error'], classes: 'red rounded'})
+                }
+                else {
+                    if (!placeholderContent || placeholderContent == '') {
+                        placeholderContent = $('#quoteDataForm .modal-content').html();
+                    }
+                    $('#quoteDataForm .modal-content').html(json['data']['html']);
+
+                    // $('.__show-modal').trigger('click');
+                    //M.Toast.dismissAll();
+
+                    $('#quoteForm #org_zip_code').val('');
+                    $('#quoteForm #dest_zip_code').val('');
+                    $('#quoteForm #weight').val('');
+
+                    if ($('#quoteForm input').hasClass('valid')) {
+                        $('#quoteForm input').removeClass('valid')
+                    }
+
+                    //$('#quoteForm  #origin option[value="0"]').prop('selected', true);
+                    //$('#quoteForm  #destination option[value="0"]').prop('selected', true);
+                    //  $('#quoteForm select').html('');
+                    $('quoteForm input').removeClass('invalid');
+                    $('quoteForm input').removeClass('valid');
+                    $('#origin').next('span').removeClass('invalid');
+                    $('#destination').next('span').removeClass('invalid');
+
+                    $('.get-quote').html(icw_lang_object.get_quote);
+                    $('.get-quote').prop('disabled', false);
+
+                    $('#btnShowRates').html(icw_lang_object.icw_show_rates);
+                    $('#btnShowRates').prop('disabled', false);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                jQuery('#quoteEmailForm').hide();
+                //console.log(xhr.status);
+                //console.log(thrownError);
+                //sconsole.log(xhr.responseText);
+                if (xhr.status == 500) {
+                    $('#quote-row').before('<div aria-live="polite"><span class="quote-error-message">' + icw_lang_object.server_error + '</span></div>');
+                    $('.get-quote').html(icw_lang_object.get_quote);
+                    $('.get-quote').prop('disabled', false);
+                }
+            }
+        });
+    });
+
+    $('#get-quote-reset').click(function () {
+        $("#quoteForm").trigger('reset');
+        $("#destination").trigger('change');
+        $("#destination2").trigger('change');
+        $("#origin").trigger('change');
+        $("#unit").trigger('change');
+        $("#lblOriginZip").addClass("active");
+        $("#lblDestinationZip").addClass("active");
+        $("#quoteForm").find('input').removeClass("invalid");
+        $("#quoteForm").find('input').removeClass("__loader");
+        $("#quoteForm").find("span.error").hide();
+        $('#org_zip_code').attr('placeholder', '12345');//default
+        $('#dest_zip_code').attr('placeholder', '12345');
+
+        jQuery('#lblDestinationZip').html(icw_lang_object.postal_code);
+        jQuery('#dest_zip_code').attr('maxlength', '10');
+        jQuery('#org_zip_code').attr('maxlength', '10');
+    });
+
+    $('#weight').blur(function () {
+        validateWeight();
+    });
+
+    $('#email').blur(function () {
+        validateEmail();
+    });
+
+    $('#unit').change(function () {
+        validateWeight();
+    });
+
+    $('#length').blur(function () {
+        validateDimensions();
+    });
+
+    $('#width').blur(function () {
+        validateDimensions();
+    });
+
+    $('#height').blur(function () {
+        validateDimensions();
+    });
+});
+

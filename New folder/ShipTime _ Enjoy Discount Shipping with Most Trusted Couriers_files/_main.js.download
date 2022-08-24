@@ -1,0 +1,535 @@
+jQuery(function($) {
+	//#main-slider
+	$(function(){
+	$('.sidenav').addClass('hide');
+	console.log('beofrer side nav call....')
+    $('.sidenav').sidenav({
+		onOpenStart: function() {
+            $('.sidenav').removeClass('hide');
+        },
+		onOpenEnd: function() {
+            $('[data-target="_mobileMenu"]').attr('aria-expanded', true)
+            makeFocusInsideModal('.sidenav')
+		},
+		onCloseEnd: function(target) {
+            $('[data-target="_mobileMenu"]').attr('aria-expanded', false)
+            $('.sidenav').addClass('hide');
+        }
+	});
+    $('.scrollspy').scrollSpy();
+    $('._icwTabs').tabs();
+		$('._materialboxed').materialbox();
+    //$('.parallax').parallax();
+	  //$('._select').formSelect();
+		if($('._select').length){
+				$('._select').select2({
+					minimumResultsForSearch: 10
+				});
+		}
+    //$('.collapsible').collapsible();
+	//$('.materialboxed').materialbox();
+	//$('.modal-trigger').leanModal();
+
+	$("#_mobileMenu span.menu-toggler").on("click", function(e){
+		$(this).toggleClass("collapsed");
+		$(this).next("ul.collapse").slideToggle();
+	});
+
+	/*-------------------------------------------------------
+	 *	Slider | InCreativeWeb
+	 *-------------------------------------------------------*/
+		if ($('#_slider-couriers').length) {
+			$('#_slider-couriers').slick({
+				dots: false,
+				arrows: false,
+				slidesToShow: 4,
+				autoplay: true,
+				autoplaySpeed: 0,
+			//	infinite: true,
+				slidesToScroll: 4,
+				//pauseOnHover : false,
+				speed:2000,
+				easing:'linear',
+				pauseOnHover:true,
+				swipeToSlide:true,
+				accessibility: false,
+				responsive: [
+				{
+					breakpoint: 1024,
+					settings: {
+						slidesToShow: 4,
+						slidesToScroll: 4,
+					}
+				},
+				{
+					breakpoint: 768,
+					settings: {
+						slidesToShow: 3,
+						slidesToScroll: 3,
+					}
+				},
+				{
+					breakpoint: 600,
+					settings: {
+						slidesToShow: 3,
+						slidesToScroll: 3,
+					}
+				},
+				{
+					breakpoint: 480,
+					settings: {
+						slidesToShow: 2,
+						slidesToScroll: 2,
+						dots: false
+					}
+				}
+				// You can unslick at a given breakpoint now by adding:
+				// settings: "unslick"
+				// instead of a settings object
+			]
+			});
+
+
+			$('.slider-cat-nav li a').on('click', function(e){
+				e.preventDefault();
+				var filtername = $(this).data('url');
+				if ($(this).hasClass('active')){
+					$('.slider-cat-nav li a').removeClass('active');
+					$('#_slider-couriers').find('.courier-icon').removeClass("_highlight");
+					$('#_slider-couriers').find('.courier-icon').removeClass("__highlight");
+				} else {
+						$('#_slider-couriers').find('.courier-icon').removeClass("_highlight");
+						$('#_slider-couriers').find('.courier-icon').removeClass("__highlight");
+						$('.slider-cat-nav li a').removeClass('active');
+						$('#_slider-couriers').find('.courier-icon').addClass("_highlight");
+						$('#_slider-couriers').find('.__' + filtername).addClass("__highlight");
+						$(this).addClass('active');
+				}
+
+			});
+
+            $('._slider-couriers-control .pause').removeClass('hide');
+            $('._slider-couriers-control .play').addClass('hide');
+            $('._slider-couriers-control .pause').on('click', function() {
+                $('#_slider-couriers')
+                    .slick('slickPause')
+                    .slick('slickSetOption', 'pauseOnDotsHover', false)
+                    .slick('slickSetOption', 'autoplay', false);
+                $('._slider-couriers-control .pause').addClass('hide');
+                $('._slider-couriers-control .play').removeClass('hide');
+            });
+
+            $('._slider-couriers-control .play').on('click', function() {
+                $('#_slider-couriers')
+                    .slick('slickPlay')
+                    .slick('slickSetOption', 'pauseOnDotsHover', true)
+                    .slick('slickSetOption', 'autoplay', true);
+                $('._slider-couriers-control .pause').removeClass('hide');
+                $('._slider-couriers-control .play').addClass('hide');
+            });
+
+		/*	var filtered = false;
+			$('.slider-cat-nav li a').on('click', function(e){
+				e.preventDefault();
+				var filtername = $(this).data('url');
+				if (filtered === false) {
+					$('#_slider-couriers').slick('slickUnfilter');
+					$('#_slider-couriers').slick('slickFilter','.filter-' + filtername);
+					$('.slider-cat-nav li a').removeClass('active');
+					$(this).addClass('active');
+				} else {
+					$('#_slider-couriers').slick('slickUnfilter');
+					$('#_slider-couriers').slick('slickFilter', '.filter-' + filtername);
+					$('#_slider-couriers').slickGoTo(0);
+
+					filtered = false;
+				}
+			});*/
+		}
+   /*-------------------------------------------------------
+ 	 *	team-slider | InCreativeWeb
+ 	 *-------------------------------------------------------*/
+   if ($('#_team-slider-block').length) {
+     $('#_team-slider-block').slick({
+         dots: true,
+         infinite: true,
+         arrows: false,
+         autoplay: true,
+         autoplaySpeed: 8000,
+         slidesToShow: 4,
+         slidesToScroll: 1,
+				 accessibility: false,
+         responsive: [{
+             breakpoint: 1024,
+             settings: {
+                 slidesToShow: 3,
+                 slidesToScroll: 3,
+                 dots: true
+             }
+         }, {
+             breakpoint: 768,
+             settings: {
+                 slidesToShow: 2,
+                 slidesToScroll: 2
+             }
+         }, {
+             breakpoint: 480,
+             settings: {
+                 slidesToShow: 1,
+                 slidesToScroll: 1
+             }
+         }]
+     });
+   }
+
+	 /*-------------------------------------------------------
+		*	team-slider | InCreativeWeb
+		*-------------------------------------------------------*/
+	 if ($('#_bottom-slider-block').length) {
+		 $('#_bottom-slider-block').slick({
+				 dots: true,
+				 infinite: true,
+				 arrows: false,
+				 autoplay: true,
+				 autoplaySpeed: 8000,
+				 slidesToShow: 6,
+				 slidesToScroll: 6,
+				accessibility: false,
+				adaptiveHeight: true,
+				 responsive: [{
+						 breakpoint: 1024,
+						 settings: {
+								 slidesToShow: 5,
+								 slidesToScroll: 5,
+								 dots: true
+						 }
+				 }, {
+						 breakpoint: 768,
+						 settings: {
+								 slidesToShow: 4,
+								 slidesToScroll: 4
+						 }
+				 }, {
+						 breakpoint: 480,
+						 settings: {
+								 slidesToShow: 2,
+								 slidesToScroll: 2
+						 }
+				 }]
+		 });
+	 }
+
+	 if ($('li._menu-btn-line').length) {
+		 $("li._menu-btn-line>a").addClass("waves-effect waves-light");
+	 }
+	 if ($('li._menu-btn-primary').length) {
+		 $("li._menu-btn-primary>a").addClass("waves-effect waves-light");
+	 }
+
+/*-------------------------------------------------------
+*	equalHeights | InCreativeWeb
+*-------------------------------------------------------*/
+  if ($('.card-content').length) {
+    $(".card-content").equalHeights()
+  }
+	if ($('.service-flow .box .box-txt').length) {
+    $(".service-flow .box .box-txt").equalHeights()
+  }
+	if ($('.team-item .team-info .info-txt').length) {
+    $(".team-item .team-info .info-txt").equalHeights()
+  }
+
+	if ($('.counter').length) {
+		$('.counter').counterUp({
+		      delay: 50,
+		      time: 3000
+		  });
+		}
+
+		/*widget.elp-widget*/
+		/*if ($('input[id=es_txt_name]').length) {
+			$('input[id=es_txt_name]').attr('placeholder', 'Your name' );
+		}
+		if ($('input[id=es_txt_email]').length) {
+			$('input[id=es_txt_email]').attr('placeholder', 'Email address' );
+		}
+		widget.elp-widget
+		if ($('input[id=sendgrid_mc_first_name]').length) {
+			$('input[id=sendgrid_mc_first_name]').attr('placeholder', 'First name' );
+		}
+		if ($('input[id=sendgrid_mc_last_name]').length) {
+			$('input[id=sendgrid_mc_last_name]').attr('placeholder', 'Last name' );
+		}
+		if ($('input[id=sendgrid_mc_email]').length) {
+			$('input[id=sendgrid_mc_email]').attr('placeholder', 'Email address' );
+		}*/
+
+
+		if (jQuery("html[lang=en-US] .sendgrid_mc_fields").length) {
+			jQuery('input[id=sendgrid_mc_first_name]').attr('placeholder', 'First Name' );
+			jQuery('input[id=sendgrid_mc_last_name]').attr('placeholder', 'Last Name' );
+			jQuery('input[id=sendgrid_mc_email]').attr('placeholder', 'Email Address' );
+		}
+		if (jQuery("html[lang=fr-FR] .sendgrid_mc_fields").length) {
+			jQuery('input[id=sendgrid_mc_first_name]').attr('placeholder', 'Prénom' );
+			jQuery('input[id=sendgrid_mc_last_name]').attr('placeholder', 'Nom de famille' );
+			jQuery('input[id=sendgrid_mc_email]').attr('placeholder', 'Adresse courriel' );
+			jQuery('input[id=sendgrid_mc_email_submit]').val('S\'abonner');
+		}
+
+
+	 /*-------------------------------------------------------
+	 *	jqSocialSharer | InCreativeWeb
+	 *-------------------------------------------------------*/
+	 /*if ($('#share').length) {
+	 	$("#share a").jqSocialSharer();
+  }*/
+
+  }); // end of document ready
+});
+
+jQuery(document).ready(function($){'use strict';
+
+$('.modal').modal({
+	dismissible: false, // Modal can be dismissed by clicking outside of the modal
+  opacity: .5, // Opacity of modal background
+  onOpenStart: function() {
+		makeFocusInsideModal('.modal');
+		if($('.modal ._select').length){
+				$('.modal ._select').select2({
+					minimumResultsForSearch: 10
+				});
+		}
+			//alert('Closed');
+	} // Callback for Modal close
+});
+
+
+$('[data-fancybox]').fancybox({
+	afterShow : function( instance, current ) {
+		//console.info( instance );
+		if($('._fmodal ._select').length){
+			$('._fmodal ._select').select2({
+				minimumResultsForSearch: 10
+			});
+	}
+	}
+});
+
+	/*$('#quoteDataForm ._modal-close').bind('click',function(){
+		location.reload();
+	});*/
+
+
+	if ($('._menu-popup-signup').length) {
+		$("._menu-popup-signup a").addClass("modal-trigger");
+		$( "._menu-popup-signup a" ).click(function() {
+			// $("#frmSignup #btnSignup").removeClass("__ga-footer-get-started");
+			$("#frmSignup #btnSignup").attr("data-event", "__ga-top-signup");
+			// ga('send', 'event', 'Sign Up Free', 'click');
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Sign Up Free',
+				eventAction: 'click',
+				eventLabel: 'Sign Up/Get Started - Click'
+			});
+		});
+
+		$( "#btnGetStarted" ).click(function() {
+			$("#frmSignup #btnSignup").attr("data-event", "__ga-footer-get-started");
+		});
+		
+		$( ".__ga-popup-api-ship" ).click(function() {
+			$("#frmSignup #btnSignup").attr("data-event", "__ga-popup-api-ship");
+		});
+	}
+
+	if ($('.wpcf7-form-control').length) {
+		$(".wpcf7-form-control").on("focusin", function(e){
+			 var value = $(this).val();
+			if( value.length == 0){
+				$(this).parents(".input-field").children("label").addClass("active");
+			}
+		});
+		$(".wpcf7-form-control").on("focusout", function(e){
+			var value = $(this).val();
+			if( value.length == 0){
+				$(this).parents(".input-field").children("label").removeClass("active");
+			}
+		});
+
+	}
+
+	// fixedHeader - light header
+	if ($('#_mainContainer').length) {
+		var stickyHeaderTop = $('#_mainContainer').offset().top;
+		$(window).scroll(function(){
+			if ($(this).scrollTop() > stickyHeaderTop) {
+					$("#_mainHeader").addClass("fixed-header");
+				} else {
+					$("#_mainHeader").removeClass("fixed-header");
+				}
+			});
+			$(window).scroll(function(){
+				if ($(this).scrollTop() > 20) {
+						$("#_mainHeader").addClass("fixed-header-bg");
+					} else {
+						$("#_mainHeader").removeClass("fixed-header-bg");
+					}
+				});
+	}
+
+  /*-------------------------------------------------------
+	 *	fancybox | InCreativeWeb
+	 *-------------------------------------------------------*/
+	 if ($('.fimg').length) {
+    	$('.fimg').fancybox();
+	 }
+	if ($('.fvideo').length) {
+		$(".fvideo").fancybox({
+			maxWidth	: 800,
+			maxHeight	: 600,
+			fitToView	: false,
+			width		: '70%',
+			height		: '70%',
+			autoSize	: false,
+			closeClick	: false,
+			openEffect	: 'none',
+			closeEffect	: 'none'
+		});
+	}
+	 // anchor link
+		//<a class="btn" href="#doc"><i class="icon-doc"></i>Documentation</a>
+		$('a.btn-hash').bind('click',function(event){
+			var $anchor = $(this);
+			var $hoffset = $("#_mainHeader").height();
+			$('html, body').stop().animate({
+			  scrollTop: $($anchor.attr('href')).offset().top-$hoffset
+			}, 1000,'easeInOutExpo');
+			event.preventDefault();
+		  });
+
+
+  $('.tooltipped').tooltip();
+
+	/**
+	* CSS3 Animation effect in user side
+	* Function Name: WOW
+	* @access public
+	* @created by Jayesh Patel and 25/07/2014*/
+	try{
+		$('body').show();
+		NProgress.start();
+		setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 3000);
+
+		//window.scrollReveal = new scrollReveal({ reset: false, move: '50px' });
+
+		new WOW().init();
+	}
+	catch(e){
+		//
+	};
+});
+
+// Add GA tag
+jQuery(document).on('click','.__ga-popup-api-ship', function () {  
+	jQuery("#frmSignup #btnSignup").attr("data-event", "__ga-popup-api-ship");
+});
+
+jQuery(document).on('click','.__ga-try-your-first', function () {  
+	// ga('send', 'event', 'Try Your First Quote', 'click');
+	ga('send', {
+		hitType: 'event',
+		eventCategory: 'Try Your First Quote',
+		eventAction: 'click',
+		eventLabel: 'Try it out. Get a Quote. - Click'
+	});
+});
+
+const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+function makeFocusInsideModal(selector) {
+    var modals = document.querySelectorAll(selector);
+	console.log('modals:::', modals)
+	for (var i = 0; i<modals.length ; i++) {
+		var modal = modals[i];
+        if(modal) {
+            var firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
+            var focusableContent = modal.querySelectorAll(focusableElements);
+            var lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+
+            document.addEventListener('keydown', function (e) {
+                let isTabPressed = e.key === 'Tab' || e.keyCode === 9 || e.which  === 9;
+
+                if (!isTabPressed) {
+                    return;
+                }
+
+                if (e.shiftKey) { // if shift key pressed for shift + tab combination
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement.focus(); // add focus for the last focusable element
+                        e.preventDefault();
+                    }
+                } else { // if tab key is pressed
+                    if (document.activeElement === lastFocusableElement) { // if focused has reached to last focusable element then focus first focusable element after pressing tab
+                        console.log("last focusableContent");
+                        firstFocusableElement.focus(); // add focus for the first focusable element
+                        e.preventDefault();
+                    }
+                }
+            });
+            if(firstFocusableElement) {
+                firstFocusableElement.focus();
+            }
+        }
+	}
+
+}
+
+// Need to update again... title changes....
+// Final Code uploaded to prod clean up logs...
+if(document.querySelector(".play_block")){
+setTimeout(() => {
+    document.getElementsByClassName('play_block')[0].querySelector('a').addEventListener('click', (e) => {
+
+        console.log('element foe video ::', e)
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        if (player) {
+
+            document.getElementsByClassName('fancybox-iframe')[0].setAttribute("title", "Shiptime for e-Commerce is here video");
+            const id = document.getElementsByClassName('fancybox-iframe')[0].id;
+            player = new YT.Player(id, {
+                events: {
+                    'onStateChange': onStateChange
+                }
+            });
+        }
+
+        document.getElementsByClassName('fancybox-button fancybox-button--close')[0].addEventListener('click', (e) => {
+            tag.remove();
+        })
+    })
+}, 2000);
+
+
+let player
+
+function onStateChange(e) {
+    player.setOption('captions', 'track', {languageCode: 'en'}) // undocumented call
+}
+
+function onYouTubeIframeAPIReady() {
+    console.log('onYouTubeIframeAPIReady');
+    document.getElementsByClassName('fancybox-iframe')[0].setAttribute("title", "Shiptime for e-Commerce is here video");
+    const id = document.getElementsByClassName('fancybox-iframe')[0].id;
+    player = new YT.Player(id, {
+        events: {
+            'onStateChange': onStateChange
+        }
+    });
+}
+}
