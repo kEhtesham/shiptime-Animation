@@ -367,7 +367,7 @@
 
 .hpan-dicount_star_element {
     animation: blastDiscount 24s 1.4s linear infinite;
-    transform: translate(60px, 810px);
+    transform: translate(60px, 520px);
     transform-origin: center;
     transform-box: fill-box;
     opacity: 0;
@@ -413,19 +413,19 @@
 
 @keyframes blastDiscount {
     0% {
-        transform: translate(50px, 810px) scale(0.8);
+        transform: translate(50px, 520px) scale(0.8);
         opacity: 1;
     }
     24% {
-        transform: translate(50px, 300px) scale(1);
+        transform: translate(50px, 100px) scale(1);
         opacity: 1;
     }
     28% {
-        transform: translate(50px, 240px) scale(1);
+        transform: translate(50px, 50px) scale(1);
         opacity: 0;
     }
     100% {
-        transform: translate(50px, 0px) scale(1.2);
+        transform: translate(50px, 520px) scale(1.2);
         opacity: 0;
     }
 }
@@ -1089,8 +1089,6 @@ fbq('track', 'PageView');
 <div class="_topHeader">
 		<section class="container">
 		<div class="row mb-0">
-			<div class="col s12 m12 l7 xl8 hide-on-med-and-down">
-                <div class="h3">Save up to <span class="counter">60</span>% every time by shipping with the most trusted couriers.</div></div>
 			<div class="col s12 m12 l5 xl4">
 				<div class="topbar-info"><div id="qtranslate-2" class="widget-language qtranxs_widget">
 <ul class="language-chooser language-chooser-text qtranxs_language_chooser" id="qtranslate-2-chooser">
@@ -2768,7 +2766,9 @@ var ajaxurl = "https://shiptime.com/wp-admin/admin-ajax.php";
 </div>
 <span id="down"></span>
 <div class="header-banner-bottom">
-	<div class="down-action"><a class="btn-hash wow bounceInDown animated" title="Scroll Down" href="https://shiptime.com/#down" style="visibility: visible; animation-name: bounceInDown;"><div class="icon-scroll"></div></a></div>
+	<div class="down-action">
+        <div class="h3">Save up to <span class="counter">60</span>% every time by shipping with the most trusted couriers.</div>
+        <a class="btn-hash wow bounceInDown animated" title="Scroll Down" href="https://shiptime.com/#down" style="visibility: visible; animation-name: bounceInDown;"><div class="icon-scroll"></div></a></div>
 </div>
 
 	<div class="get-touch-action"><a href="https://shiptime.com/#get-a-quote" class="btn-hash wow fadeInDown btn waves-effect waves-light btn-primary btn-rounded __ga-try-your-first" style="visibility: hidden; animation-name: none;">Try it out. Get a quote.</a></div>
